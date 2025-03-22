@@ -9,8 +9,6 @@ if [ ! -d "$BUILD_DIR" ]; then
   mkdir "$BUILD_DIR"
 fi
 
-# one level up to root
-cd ..
 
 cd "$BUILD_DIR"
 
@@ -18,4 +16,4 @@ cmake ..
 
 cmake --build .
 
-./PA2.exe
+./PA2 
