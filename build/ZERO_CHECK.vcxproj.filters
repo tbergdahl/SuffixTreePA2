@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\trent\Documents\Spring 2025\CPTS 471\PA2\build\CMakeFiles\0ca3d7b8f2d3be12bb30f3e0adc3260a\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{E46BD259-6F4D-3BB1-8722-F790E16796AE}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

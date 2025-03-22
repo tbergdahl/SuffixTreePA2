@@ -1,0 +1,6 @@
+
+
+namespace ParseFasta
+{
+    void sayhi();
+}

@@ -1,0 +1,5 @@
+C:/Users/trent/Documents/Spring 2025/CPTS 471/PA2/build/CMakeFiles/PA2.dir
+C:/Users/trent/Documents/Spring 2025/CPTS 471/PA2/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/trent/Documents/Spring 2025/CPTS 471/PA2/build/CMakeFiles/ZERO_CHECK.dir
+C:/Users/trent/Documents/Spring 2025/CPTS 471/PA2/build/SuffixTree/CMakeFiles/SuffixTree.dir
+C:/Users/trent/Documents/Spring 2025/CPTS 471/PA2/build/ParseFasta/CMakeFiles/ParseFasta.dir
