@@ -26,7 +26,7 @@ set(PARSE_FASTA_DIR ${PROJECT_ROOT_DIR}/ParseFasta)
 set(SUFFIX_TREE_INCLUDE ${SUFFIX_TREE_DIR}/include)
 set(PARSE_FASTA_INCLUDE ${PARSE_FASTA_DIR}/include)
 
-# Include directories for the PA2
+# Include directories for PA2
 target_include_directories(PA2 PRIVATE
     ${SUFFIX_TREE_INCLUDE}
     ${PARSE_FASTA_INCLUDE}

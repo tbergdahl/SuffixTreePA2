@@ -1,16 +1,12 @@
 #include <gtest/gtest.h>
 
-int add(int a, int b) {
-    return a + b;
-}
+#include "parse.h"
 
-TEST(MathTests, AddWorks) {
-    EXPECT_EQ(add(1, 1), 2);
-    EXPECT_EQ(add(-1, 1), 0);
-}
+using namespace ParseFasta;
 
-TEST(MathTests, AddFailsExample) {
-    EXPECT_NE(add(2, 2), 5);  // This test passes because 4 != 5
+TEST(parse_tests, CorrectEmptyString)
+{
+    EXPECT_EQ("", ParseFasta::parse("", ""));
 }
 
 // Main entry point (optional, but typical)
