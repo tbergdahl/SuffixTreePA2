@@ -21,6 +21,27 @@
           "command": "powershell",
           "args": ["./scripts/build_run.ps1"]
         }
+      },
+      {
+        "label": "Build and Run Tests",
+        "type": "shell",
+        "command": "bash",
+        "args": ["./scripts/build_run_tests.sh"],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "problemMatcher": [],
+        "presentation": {
+          "reveal": "always",
+          "panel": "shared",
+          "focus": false,
+          "clear": true
+        },
+        "windows": {
+          "command": "powershell",
+          "args": ["./scripts/build_run_tests.ps1"]
+        }
       }
     ]
 }

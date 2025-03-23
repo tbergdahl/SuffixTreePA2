@@ -1,4 +1,5 @@
-
+#ifndef NODE
+#define NODE
 
 namespace SuffixTree
 {
@@ -15,3 +16,5 @@ private:
 };
 
 }
+
+#endif

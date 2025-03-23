@@ -1,3 +1,6 @@
+#ifndef TREE
+#define TREE
+
 #include "node.h"
 
 
@@ -31,3 +34,5 @@ private:
 };
 
 }
+
+#endif

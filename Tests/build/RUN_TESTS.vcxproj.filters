@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\trent\Documents\Spring 2025\CPTS 471\PA2\Tests\build\CMakeFiles\0b122e0fa9e3426f283697a2a91d5963\RUN_TESTS_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{AD7C133F-75CE-37D1-939B-9908303203AD}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
