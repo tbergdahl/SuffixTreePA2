@@ -4,9 +4,11 @@
 namespace ParseFasta
 {
     
-void sayhi()
+std::string const DEFAULT_ALPHABET = "ACGT";
+
+std::string parse(std::string const& filename, std::string const& alphabet_filename)
 {
-    std::cout << "Hi from parse module!";
+    
 }
 
 }

@@ -1,6 +1,8 @@
 # create static lib
 add_library(SuffixTree STATIC
-    src/tree.cpp
+    src/tree_pub.cpp
+    src/tree_priv.cpp
+    src/node.cpp
 )
 
 # include dirs
