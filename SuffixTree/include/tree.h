@@ -15,7 +15,7 @@ class Tree
 public:
     static Tree build(std::string const& str, std::string const& alphabet);
 
-    void display_children(PNode const& node) const;
+    void display_children() const;
 
     void enumerate_nodes() const;
 
@@ -23,9 +23,7 @@ public:
 private:
     Tree() = default;
 
-    void insert(std::string const& suffix);
-
-    void insert(PNode const& node, std::string const& suffix);
+    void display_children(const PNode& node, std::string current_str) const;
 
     PNode root;
 
