@@ -16,6 +16,7 @@ set(PROJECT_ROOT_DIR ${CMAKE_SOURCE_DIR})
 set(SUFFIX_TREE_DIR ${PROJECT_ROOT_DIR}/SuffixTree)
 set(PARSE_FASTA_DIR ${PROJECT_ROOT_DIR}/ParseFasta)
 
+
 # Include directories variables
 set(SUFFIX_TREE_INCLUDE ${SUFFIX_TREE_DIR}/include)
 set(PARSE_FASTA_INCLUDE ${PARSE_FASTA_DIR}/include)
