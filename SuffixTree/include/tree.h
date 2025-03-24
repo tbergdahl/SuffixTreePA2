@@ -9,13 +9,15 @@
 
 namespace SuffixTree
 {
-using PNode = std::unique_ptr<Node>;
 class Tree
 {
 public:
     static Tree build(std::string const& str, std::string const& alphabet);
 
-    void display_children() const;
+    void Tree::display() {
+        std::cout << "Suffix Tree:" << std::endl;
+        display(root, user_input);
+    }
 
     void enumerate_nodes() const;
 
@@ -23,11 +25,15 @@ public:
 private:
     Tree() = default;
 
-    void display_children(const PNode& node, std::string current_str) const;
+    void display(Node* node, std::string const& orig_str, int indent = 0);
 
-    PNode root;
+    void find_path(Node *u, std::string const& s, int i);
+
+    Node* root;
 
     unsigned node_count;
+
+    std::string user_input; // for testing
 
 };
 

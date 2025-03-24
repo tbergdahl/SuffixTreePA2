@@ -7,6 +7,6 @@ using namespace ParseFasta;
 int main(void)
 {
     auto tree = SuffixTree::Tree::build("banana", "abcdefghijklmnopqrstuvwxyz");
-    tree.display_children();
+    tree.display();
     return 0;
 }

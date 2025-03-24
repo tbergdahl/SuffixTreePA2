@@ -14,20 +14,16 @@ enum class NodeType
     LEAF
 };
 
-class Node
-{
-public:
-    Node(unsigned n_id);
+struct Node {
+    // each holds a range of a string
+    int start;        // Start index of the substring
+    int end;         // End index of the substring (to support extension in Ukkonen, but optional here)
 
-    void print();
+    int suffixIndex;  // Leaf node's suffix index
+    std::map<char, Node*> children;
 
-private:
-    int id = -1;
-    std::map<char, std::unique_ptr<Node>> children;
-
-    NodeType type;
-
-    friend class Tree;
+    Node(int s = -1, int e = -1)
+        : start(s), end(e), suffixIndex(-1) {}
 };
 
 }
