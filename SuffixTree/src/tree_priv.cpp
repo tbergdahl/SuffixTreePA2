@@ -10,84 +10,84 @@ namespace SuffixTree
         last_inserted_leaf = nullptr;
     }
 
-void Tree::find_path(Node* u, const std::string& s, int index)
-{
-    Node* v = u;
-    auto x = s.substr(index);  // Substring from the current index
-
-    if (x.empty()) return;
-
-    while (true)
-    {
-        // find child branch starting with x[1] (0 in code)
-        char firstChar = x[0];
-        auto it = v->children.find(firstChar);
-
-        // If such branch exists
-        if (it == v->children.end())
-        {
-            // insert leaf for s
-            Node* leaf = new Node();
-            leaf->start = index;
-            leaf->end = -1;  // End is -1 to indicate it's a leaf node
-            leaf->suffixIndex = index;
-            leaf->parent = v;
-            leaf->string_depth = index;
-            v->children[firstChar] = leaf;
-            last_inserted_leaf = leaf;
-            leaf_node_count++;
-            break;
-        }
-
-        
-        Node* existing = it->second;
-        int suf_start = existing->start;
-        int suf_end = (existing->end == -1 ? (s.length() - 1) : existing->end);
-        int j = suf_start;
-        int i = 0;
-
-        // compare chars of edge label against x[1..] until first mismatch or edge label exhuasted
-        while (x[i] == s[j] && j <= suf_end) {
-            i++;
-            j++;
-        }
-
-        if(x[i] != s[j])
-        {
-            Node* internalNode = new Node();
-            internalNode->start = existing->start;
-            internalNode->end = existing->start + i - 1;  // Split at length i from edge start
-            internalNode->parent = v;
-            internalNode->string_depth = v->string_depth + i;
-            std::cout << "New internal node created: (" << std::to_string(internalNode->start) << ", " << std::to_string(internalNode->end) << ") " << s.substr(internalNode->start, internalNode->end - internalNode->start + 1) << std::endl; 
-            
-            // Update existing node (now becomes child)
-            existing->start = internalNode->end + 1;
-            existing->parent = internalNode;
-            std::cout << "Existing Node Modified: (" << std::to_string(existing->start) << ", " << std::to_string(existing->end) << ") " << s.substr(existing->start, existing->end - existing->start + 1) << std::endl;
-            
-            // Create new leaf
-            Node* leaf = new Node();
-            leaf->start = index + i;  // Critical fix: position in original string
-            leaf->end = -1;
-            leaf->suffixIndex = index;
-            leaf->parent = internalNode;
-            std::cout << "New leaf node created: (" << std::to_string(existing->start) << ") " << s.substr(existing->start) << std::endl;
-            
-            // Update pointers
-            v->children[firstChar] = internalNode;
-            internalNode->children[s[existing->start]] = existing;
-            internalNode->children[x[i]] = leaf;
-            break;
-        }
-        else
-        {
-            v = existing; 
-            x = x.substr(i);
+    void Tree::find_path(Node* u, const std::string& s, int index) {
+        Node* v = u;
+        int matched = 0; // Track total matched characters from the suffix
+        auto x = s.substr(index); // Remaining suffix to insert
+    
+        if (x.empty()) return;
+    
+        while (true) {
+            char firstChar = x[0];
+            auto it = v->children.find(firstChar);
+    
+            // Case 1: No existing edge - create new leaf
+            if (it == v->children.end()) {
+                Node* leaf = new Node();
+                leaf->start = index + matched; // Correctly offset by total matched
+                leaf->end = -1;
+                leaf->suffixIndex = index;
+                leaf->parent = v;
+                leaf->string_depth = v->string_depth + x.length();
+                v->children[firstChar] = leaf;
+                last_inserted_leaf = leaf;
+                leaf_node_count++;
+                break;
+            }
+    
+            Node* existing = it->second;
+            int suf_start = existing->start;
+            int suf_end = (existing->end == -1) ? (s.length() - 1) : existing->end;
+            int j = suf_start;
+            int i = 0;
+    
+            // Compare characters until mismatch or edge exhausted
+            while (i < x.size() && j <= suf_end && x[i] == s[j]) {
+                i++;
+                j++;
+            }
+    
+            // Case 2: Entire edge matched - proceed to child node
+            if (j > suf_end) {
+                v = existing;
+                matched += i; // Accumulate matched characters
+                x = x.substr(i); // Update remaining suffix
+                continue; // Process next part of the suffix
+            }
+    
+            // Case 3: Mismatch within edge - split edge
+            if (x[i] != s[j]) {
+                // Create internal node
+                Node* internalNode = new Node();
+                internalNode->start = suf_start;
+                internalNode->end = suf_start + i - 1;
+                internalNode->parent = v;
+                internalNode->string_depth = v->string_depth + i;
+    
+                // Adjust existing node (now child of internal node)
+                existing->start = internalNode->end + 1;
+                existing->parent = internalNode;
+    
+                // Create new leaf for remaining suffix
+                Node* leaf = new Node();
+                leaf->start = index + matched + i; // Correct start with total matched
+                leaf->end = -1;
+                leaf->suffixIndex = index;
+                leaf->parent = internalNode;
+                leaf->string_depth = internalNode->string_depth + (x.size() - i);
+    
+                // Update parent-child relationships
+                v->children[firstChar] = internalNode;
+                internalNode->children[s[existing->start]] = existing;
+                internalNode->children[x[i]] = leaf;
+    
+                // Update metadata
+                last_inserted_leaf = leaf;
+                leaf_node_count++;
+                break;
+            }
         }
     }
-}
-
 
     void Tree::build_tree(const std::string& input, int pos)
     {
