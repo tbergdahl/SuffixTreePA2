@@ -32,7 +32,7 @@ public:
     {
         return num_internal_nodes;
     }
-
+    std::string computeBWT(const std::string& s);
 private:
     Tree();
 
@@ -59,8 +59,9 @@ private:
 
     unsigned num_leaf_nodes = 0;
 
-    unsigned num_internal_nodes = 0;
-
+    std::string user_input; // for testing
+    void collectSuffixIndicesHelper(Node* node, std::vector<int>& indices);
+    std::vector<int> collectSuffixIndices();
 };
 
 }
