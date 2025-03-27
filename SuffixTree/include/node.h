@@ -7,19 +7,27 @@
 
 namespace SuffixTree
 {
-struct Node {
-    // each holds a range of a string
-    int start;       // Start index of the substring
-    int end;         // End index of the substring
+struct Node 
+{
+    // the start and end indices of the substring the node holds
+    int start;
+    int end;
 
-    int suffixIndex;  // Leaf node's suffix index
+    // leaf node's suffix index
+    int suffix_index;
+
+    // children of this node
     std::map<char, Node*> children;
-    std::uint32_t id;
+
+    // parent of this node
     Node* parent;
+
+    // suffix link of this node
     Node *suffix_link;
+
+    // string depth of this node
     int string_depth;
 };
-
 }
 
 #endif

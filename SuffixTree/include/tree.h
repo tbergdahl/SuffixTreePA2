@@ -12,50 +12,54 @@ namespace SuffixTree
 class Tree
 {
 public:
+    // Create a suffix tree given an input string. Returns an empty tree if the input contains a character not in the input alphabet.
     static Tree build(std::string const& str, std::string const& alphabet);
 
-    void display() {
-        //std::cout << "String:" << str << std::endl;
-        display(root, user_input);
-    }
-
+    // not sure
     void enumerate_nodes() const;
 
+    // creates a bwt for the current tree
     void bwt_for(std::string const& str) const;
 
-    unsigned leaf_count() const
+    // returns the number of leaf nodes in the tree
+    unsigned leaf_node_count() const
     {
-        return leaf_node_count;
+        return num_leaf_nodes;
     }
 
-    unsigned internal_count() const
+    // returns the number of internal nodes in the tree
+    unsigned internal_node_count() const
     {
-        return internal_node_count;
+        return num_internal_nodes;
     }
+
 private:
-    Tree() = default;
+    Tree();
 
+    // used for debugging
     void display(Node* node, std::string const& orig_str, int indent = 0);
 
+    // find a path starting from the input node, such that the input suffix can be inserted at the end of the path
     void find_path(Node *u, std::string const& s, int i);
 
-    void build_tree(std::string const& input, int pos);
+    // insert a suffix into the tree
+    void insert_suffix(std::string const& input, int pos);
 
+    // traverse down starting from the input node, until the input string depth is reached
     Node* node_hop(Node* n, int depth, std::string const& s);
 
-    // tree traversal statics to assist build_tree()
+    // tree traversal static to assist build_tree()
     static Node* last_inserted_leaf;
 
-    // resets above statics
+    // resets above static
     static void reset();
 
 
     Node* root;
 
-    unsigned leaf_node_count;
-    unsigned internal_node_count;
+    unsigned num_leaf_nodes = 0;
 
-    std::string user_input; // for testing
+    unsigned num_internal_nodes = 0;
 
 };
 

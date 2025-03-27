@@ -6,7 +6,7 @@ using namespace ParseFasta;
 
 int main(int argc, char *argv[])
 {
-    auto tree = SuffixTree::Tree::build("gatagaca", "gatc");
+    auto tree = SuffixTree::Tree::build("bananaban", "ban");
     tree.display();
     std::cout << "Leaf Count: " << std::to_string(tree.leaf_count()) << std::endl << "Internal Node Count: " << std::to_string(tree.internal_count()) << std::endl;
     return 0;

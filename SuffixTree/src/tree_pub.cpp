@@ -9,24 +9,15 @@ constexpr char ESCAPE_CHAR = '$';
 Tree Tree::build(std::string const& str, std::string const& alphabet)
 {
     auto tree = Tree();
-    tree.root = new Node();
-    tree.root->start = 0;
-    tree.root->end = 0;
-    tree.root->suffix_link = tree.root;
-    tree.root->parent = tree.root;
-    tree.reset();
-
-    // if any characters in the input are not a part of the alphabet
+    // if any characters in the input are not a part of the alphabet, return empty tree
     if(str.find_first_not_of(alphabet) != std::string::npos)
     {
         return tree;
     }
 
     std::string input = str + ESCAPE_CHAR;
-    tree.user_input = input; // for debug
-    std::cout << input << std::endl;
     for (int i = 0; i < input.length(); i++) {
-        tree.find_path(tree.root, input, i);
+        tree.insert_suffix(input, i);
     }
 
     return tree;
@@ -41,4 +32,5 @@ void Tree::bwt_for(std::string const& str) const
 {
     // todo
 }
+
 }
