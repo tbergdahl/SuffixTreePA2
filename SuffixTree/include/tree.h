@@ -14,7 +14,7 @@ class Tree
 public:
     static Tree build(std::string const& str, std::string const& alphabet);
 
-    void Tree::display() {
+    void display() {
         //std::cout << "String:" << str << std::endl;
         display(root, user_input);
     }
