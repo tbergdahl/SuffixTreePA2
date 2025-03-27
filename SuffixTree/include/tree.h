@@ -15,7 +15,7 @@ public:
     static Tree build(std::string const& str, std::string const& alphabet);
 
     void Tree::display() {
-        std::cout << "Suffix Tree:" << std::endl;
+        //std::cout << "String:" << str << std::endl;
         display(root, user_input);
     }
 

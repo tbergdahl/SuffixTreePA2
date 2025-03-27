@@ -24,8 +24,9 @@ Tree Tree::build(std::string const& str, std::string const& alphabet)
 
     std::string input = str + ESCAPE_CHAR;
     tree.user_input = input; // for debug
+    std::cout << input << std::endl;
     for (int i = 0; i < input.length(); i++) {
-        tree.build_tree(input, i);
+        tree.find_path(tree.root, input, i);
     }
 
     return tree;
