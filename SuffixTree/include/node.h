@@ -1,17 +1,33 @@
+#ifndef NODE
+#define NODE
 
+#include <map>
+#include <string>
+#include <memory>
 
 namespace SuffixTree
 {
-
-class Node
+struct Node 
 {
-public:
-    Node(unsigned n_id);
+    // the start and end indices of the substring the node holds
+    int start;
+    int end;
 
-    void print();
+    // leaf node's suffix index
+    int suffix_index;
 
-private:
-    unsigned id;
+    // children of this node
+    std::map<char, Node*> children;
+
+    // parent of this node
+    Node* parent;
+
+    // suffix link of this node
+    Node *suffix_link;
+
+    // string depth of this node
+    int string_depth;
 };
-
 }
+
+#endif
