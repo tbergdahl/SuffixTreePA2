@@ -1,59 +1,66 @@
 #include "parse.h"
+#include <utility>
 
 
 namespace ParseFasta
 {
-
 std::string const DEFAULT_ALPHABET = "ACGT";
 
-std::string parse(std::string const& filename, std::string const& alphabet_filename) {
-    std::ifstream sequencesfile(filename);
+Seq_alph_pair parse(std::string const& filename, std::string const& alphabet_filename) 
+{
+    std::ifstream sequences_file (filename);
     std::ifstream alphabet_file(alphabet_filename);
-    std::string result;
+    Seq_alph_pair output {};
 
     // alphabet file
-    if (alphabet_file.is_open()) {
+    if (alphabet_file.is_open()) 
+    {
         std::string alphabet_line;
-        while (std::getline(alphabet_file, alphabet_line)) {
+        while (std::getline(alphabet_file, alphabet_line)) 
+        {
             std::string result_line;
-            for (char current:alphabet_line) {
-                if (current != ' ') {
-                    result_line += current; 
+            for (char current : alphabet_line) 
+            {
+                if (current != ' ') 
+                {
+                    output.first += current; 
                 }
             }
-            result += result_line + "\n"; 
         }
         alphabet_file.close();
-    } else {
-        std::cerr << "Error 69 " << alphabet_filename << std::endl;
-        return "";
+    } 
+    else 
+    {
+        throw std::exception("File did not open");
     }
 
 
     //fasta file
-    if (sequencesfile.is_open()) {
+    if (sequences_file.is_open()) 
+    {
         std::string line;
         bool is_sequence = false; 
-        while (std::getline(sequencesfile, line)) {
-            if (!line.empty() && line[0] == '>') {
+        while (std::getline(sequences_file, line)) 
+        {
+            if (!line.empty() && line[0] == '>') 
+            {
                 // this is just some files have more htan one sequence it adds a line
-                if (is_sequence) {
-                    result += "\n";
-                }
                 is_sequence = true;
                 continue;
             }
-            if (is_sequence) {
-                result += line;
+            if (is_sequence) 
+            {
+                output.second += line;
             }
         }
-        sequencesfile.close();
-    } else {
-        std::cerr << " error 696969 "<< filename<< std::endl;
-        return "";
+        sequences_file.close();
+    } 
+    else 
+    {
+        throw std::exception("File did not open");
     }
 
-    return result;
+    return output;
 }
 
 
