@@ -10,7 +10,7 @@ namespace SuffixTree
 // plugin to the node's children maps to define ordering of characters in the map (i.e. map '$' to smallest lexographically)
 struct AlphabetOrdering
 {
-    bool operator()(char& a, char& b) const
+    bool operator()(char a, char b) const
     {
         if(a == '$' && b != '$')
         {

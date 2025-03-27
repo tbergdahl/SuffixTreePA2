@@ -2,6 +2,7 @@
 #include <utility>
 
 
+
 namespace ParseFasta
 {
 std::string const DEFAULT_ALPHABET = "ACGT";
@@ -9,31 +10,38 @@ std::string const DEFAULT_ALPHABET = "ACGT";
 Seq_alph_pair parse(std::string const& filename, std::string const& alphabet_filename) 
 {
     std::ifstream sequences_file (filename);
-    std::ifstream alphabet_file(alphabet_filename);
+    
     Seq_alph_pair output {};
 
-    // alphabet file
-    if (alphabet_file.is_open()) 
+    if(!alphabet_filename.empty())
     {
-        std::string alphabet_line;
-        while (std::getline(alphabet_file, alphabet_line)) 
+        std::ifstream alphabet_file(alphabet_filename);
+        // alphabet file
+        if (alphabet_file.is_open()) 
         {
-            std::string result_line;
-            for (char current : alphabet_line) 
+            std::string alphabet_line;
+            while (std::getline(alphabet_file, alphabet_line)) 
             {
-                if (current != ' ') 
+                std::string result_line;
+                for (char current : alphabet_line) 
                 {
-                    output.first += current; 
+                    if (current != ' ') 
+                    {
+                        output.first += current; 
+                    }
                 }
             }
+            alphabet_file.close();
+        } 
+        else 
+        {
+            throw std::exception("File did not open");
         }
-        alphabet_file.close();
-    } 
-    else 
-    {
-        throw std::exception("File did not open");
     }
-
+    else
+    {
+        output.first = DEFAULT_ALPHABET;
+    }
 
     //fasta file
     if (sequences_file.is_open()) 

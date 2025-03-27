@@ -7,13 +7,15 @@ if (-Not (Test-Path -Path $BUILD_DIR)) {
 # Change to the build directory
 Set-Location -Path $BUILD_DIR
 
+
 # Run CMake to configure the project
 cmake ..
 
+cd ..
 
-cmake --build . --config Debug
+cmake --build build
 
-$exePath = ".\Debug\PA2.exe"
+$exePath = "build\Debug\PA2.exe"
 
 if (Test-Path $exePath) {
     & $exePath

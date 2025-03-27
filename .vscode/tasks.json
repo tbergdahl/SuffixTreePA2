@@ -42,6 +42,13 @@
           "command": "powershell",
           "args": ["./scripts/build_run_tests.ps1"]
         }
+      },
+      {
+        "label": "Run w/input file",
+        "type": "shell",
+        "command": "powershell",
+        "args": ["./build/Debug/PA2", "s1.fas", "English_alphabet.txt"],
+        "problemMatcher": [],
       }
     ]
 }

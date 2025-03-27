@@ -9,7 +9,7 @@
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/Debug/PA2.exe",
-            "args": [],
+            "args": ["s1.fas", "English_alphabet.txt"],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],

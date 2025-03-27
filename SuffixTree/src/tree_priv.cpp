@@ -9,6 +9,7 @@ Tree::Tree()
     root->start = root->end = 0;
     root->suffix_link = root;
     root->parent = root;
+    num_internal_nodes++; // root counts :)
     reset();
 }
 
