@@ -46,7 +46,7 @@ void Tree::find_path(Node* u, const std::string& s, int index)
             // make the leaf start at the point of the last matched character
             leaf->start = index + matched;
             leaf->end = -1;
-            leaf->suffixIndex = index;
+            leaf->suffix_index = index;
             leaf->parent = v; 
 
             // see below - x may be modified if we matched an entire edge
@@ -126,7 +126,7 @@ void Tree::find_path(Node* u, const std::string& s, int index)
             // adjust start to be the position of the first unmatched character, including matched characters from prev iterations
             leaf->start = index + matched + i; 
             leaf->end = -1;
-            leaf->suffixIndex = index;
+            leaf->suffix_index = index;
 
             // make child of common suffix between inserted and existing
             leaf->parent = internal_node;
@@ -226,7 +226,7 @@ void Tree::display(Node* node, const std::string& orig_str, int indent)
     }
     else if (node->end == -1)
     {
-        std::cout << "Leaf: " << orig_str.substr(node->start) << " (Label: " << node->suffixIndex << ")" << std::endl;
+        std::cout << "Leaf: " << orig_str.substr(node->start) << " (Label: " << node->suffix_index << ")" << std::endl;
     }
     else
     {
