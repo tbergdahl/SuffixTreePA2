@@ -12,6 +12,9 @@ Tree Tree::build(std::string const& str, std::string const& alphabet)
     tree.root = new Node();
     tree.root->start = 0;
     tree.root->end = 0;
+    tree.root->suffix_link = tree.root;
+    tree.root->parent = tree.root;
+    tree.reset();
 
     // if any characters in the input are not a part of the alphabet
     if(str.find_first_not_of(alphabet) != std::string::npos)
@@ -20,9 +23,9 @@ Tree Tree::build(std::string const& str, std::string const& alphabet)
     }
 
     std::string input = str + ESCAPE_CHAR;
-    tree.user_input = input;// for debug
+    tree.user_input = input; // for debug
     for (int i = 0; i < input.length(); i++) {
-        tree.find_path(tree.root, input, i);
+        tree.build_tree(input, i);
     }
 
     return tree;

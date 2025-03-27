@@ -29,6 +29,17 @@ private:
 
     void find_path(Node *u, std::string const& s, int i);
 
+    void build_tree(std::string const& input, int pos);
+
+    Node* node_hop(Node* n, int index);
+
+    // tree traversal statics to assist build_tree()
+    static Node* last_inserted_leaf;
+
+    // resets above statics
+    static void reset();
+
+
     Node* root;
 
     unsigned node_count;

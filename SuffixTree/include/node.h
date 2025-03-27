@@ -7,23 +7,17 @@
 
 namespace SuffixTree
 {
-
-enum class NodeType
-{
-    INTERNAL,
-    LEAF
-};
-
 struct Node {
     // each holds a range of a string
-    int start;        // Start index of the substring
-    int end;         // End index of the substring (to support extension in Ukkonen, but optional here)
+    int start;       // Start index of the substring
+    int end;         // End index of the substring
 
     int suffixIndex;  // Leaf node's suffix index
     std::map<char, Node*> children;
-
-    Node(int s = -1, int e = -1)
-        : start(s), end(e), suffixIndex(-1) {}
+    std::uint32_t id;
+    Node* parent;
+    Node *suffix_link;
+    int string_depth;
 };
 
 }
