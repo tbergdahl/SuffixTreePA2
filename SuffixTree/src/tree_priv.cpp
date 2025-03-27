@@ -29,6 +29,7 @@ namespace SuffixTree
                 leaf->parent = v;
                 v->children[firstChar] = leaf;
                 last_inserted_leaf = leaf;
+                leaf_node_count++;
                 break;
             }
 
@@ -48,6 +49,7 @@ namespace SuffixTree
                 internalNode->parent = v;
                 internalNode->string_depth = v->string_depth + (j - suf_start);
                 v->children[firstChar] = internalNode;
+                internal_node_count++;
 
                 Node* leaf = new Node();
                 leaf->start = i;
@@ -55,6 +57,7 @@ namespace SuffixTree
                 leaf->suffixIndex = index;
                 leaf->parent = internalNode;
                 last_inserted_leaf = leaf;
+                leaf_node_count++;
 
                 existing->start = j;
                 existing->parent = internalNode;
@@ -71,26 +74,47 @@ namespace SuffixTree
         }
     }
 
-    void Tree::build_tree(std::string const& input, int pos)
-    {
+    void Tree::build_tree(const std::string& input, int pos) {
         if (!last_inserted_leaf) last_inserted_leaf = root;
+    
         Node* u = last_inserted_leaf->parent;
-        if (u->suffix_link)
+        if (!u) u = root;  // Handle case where last_inserted_leaf is root
+    
+        if (u->suffix_link) 
         {
             u = u->suffix_link;
             find_path(u, input, pos + u->string_depth);
-        }
-        else
+        } 
+        else 
         {
             Node* grandparent = u->parent;
-            int suffixStart = (grandparent->end == -1) ? pos : pos + grandparent->end;
-            find_path(grandparent, input, suffixStart);
+            Node* v = grandparent == root ? root : grandparent->suffix_link;
+            v = node_hop(v, u->string_depth - (grandparent == root ? 0 : grandparent->string_depth), input);
+
+            // insert (reuse find_path insert code)
+            find_path(v, input, pos + v->string_depth);
+            u->suffix_link = v;  // Set suffix link for future use
         }
     }
 
-    Node* Tree::node_hop(Node* n, int depth)
-    {
-        return nullptr;
+    Node* Tree::node_hop(Node* n, int depth, const std::string& s) {
+        if (!n) return root;  
+    
+        while (depth > 0 && n != root) 
+        {
+            int edge_len = n->end - n->start + 1;
+            if (depth >= edge_len) {
+                depth -= edge_len;
+                char next_char = s[n->start + edge_len];  // Next character after this edge
+                auto it = n->children.find(next_char);
+                n = it->second;
+            } 
+            else 
+            {
+                break;  // The target is within the current edge
+            }
+        }
+        return n;
     }
 
     void Tree::display(Node* node, const std::string& orig_str, int indent)

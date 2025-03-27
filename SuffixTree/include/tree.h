@@ -22,6 +22,16 @@ public:
     void enumerate_nodes() const;
 
     void bwt_for(std::string const& str) const;
+
+    unsigned leaf_count() const
+    {
+        return leaf_node_count;
+    }
+
+    unsigned internal_count() const
+    {
+        return internal_node_count;
+    }
 private:
     Tree() = default;
 
@@ -31,7 +41,7 @@ private:
 
     void build_tree(std::string const& input, int pos);
 
-    Node* node_hop(Node* n, int index);
+    Node* node_hop(Node* n, int depth, std::string const& s);
 
     // tree traversal statics to assist build_tree()
     static Node* last_inserted_leaf;
@@ -42,7 +52,8 @@ private:
 
     Node* root;
 
-    unsigned node_count;
+    unsigned leaf_node_count;
+    unsigned internal_node_count;
 
     std::string user_input; // for testing
 
