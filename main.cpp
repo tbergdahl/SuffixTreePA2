@@ -60,7 +60,6 @@ void measure_construction_performance(const std::string& test_dir)
 
     outfile << "========================================================================\n";
 
-    // Close the output file
     outfile.close();
 }
 
@@ -78,18 +77,14 @@ int main(int argc, char *argv[])
     std::string cur_dir = fs::current_path().string();
     std::string test_dir = path_char + std::string("Tests") + path_char + std::string("TestData") + path_char;
 
-    //measure_construction_performance(cur_dir + test_dir);
-
-    // default to mississipi file
-    std::string fasta_filename    = cur_dir + test_dir + "Covid_Brazil.fasta";
+    std::string fasta_filename    = cur_dir + test_dir + "Human-BRCA2-cds.fasta";
     std::string alphabet_filename = cur_dir + test_dir + "English_alphabet.txt";
 
-    
-    if(argc > 1) // fasta file arg exists
+    if(argc > 1)
     {
-        fasta_filename    = cur_dir + test_dir + std::string(argv[1]);
+        fasta_filename = cur_dir + test_dir + std::string(argv[1]);
     }
-    if(argc > 2) // alphabet filename exists
+    if(argc > 2)
     {
         alphabet_filename = cur_dir + test_dir + std::string(argv[2]);
     }
@@ -104,27 +99,35 @@ int main(int argc, char *argv[])
         pair = parse(fasta_filename, alphabet_filename);
     }
 
-    std::cout << pair.first;
-    std::cout << pair.second;
+    std::string output_filename = cur_dir + path_char + "output" + path_char + "outputs.txt";
+    std::ofstream output_file(output_filename);
 
-    
+    if (!output_file.is_open()) {
+        std::cerr << "Error: Unable to open file for writing: " << output_filename << std::endl;
+        return 1;
+    }
 
     auto tree = Tree::build(pair.second, pair.first);
+    std::string terminated_reference = pair.second + "$";
+    std::string bwt2 = tree.compute_BWT(terminated_reference);
+
+
+    for (char c : bwt2) {
+        output_file << c << "\n";
+    }
+
+    output_file.close();
+
+
+
     std::cout << "Leaf Count: " << std::to_string(tree.leaf_node_count()) << std::endl << "Internal Node Count: " << std::to_string(tree.internal_node_count()) << std::endl;
     std::cout << "average string depth: " << std::to_string(tree.average_string_depth()) << std::endl;
     std::cout << "Deepest string depth: " << std::to_string(tree.deepest_string_depth()) << std::endl;
     tree.enumerate_nodes();
+   
 
 
 
-    //std::string terminated_reference = pair.second + "$";
-    //std::string bwt = tree.compute_BWT(terminated_reference);
-    //std::cout << "\nBWT for \"" << bwt << std::endl;
-  
-    
-    
+        return 0;
 
-
-    return 0;
-
-}
+    }

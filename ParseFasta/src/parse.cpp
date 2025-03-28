@@ -43,7 +43,7 @@ Seq_alph_pair parse(std::string const& filename, std::string const& alphabet_fil
         output.first = DEFAULT_ALPHABET;
     }
 
-    //fasta file
+
     if (sequences_file.is_open()) 
     {
         std::string line;
