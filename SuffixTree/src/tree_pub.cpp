@@ -33,4 +33,30 @@ void Tree::bwt_for(std::string const& str) const
     // todo
 }
 
+unsigned Tree::leaf_node_count() const
+{
+    return num_leaf_nodes;
+}
+
+// returns the number of internal nodes in the tree
+unsigned Tree::internal_node_count() const
+{
+    return num_internal_nodes;
+}
+
+unsigned Tree::total_node_count() const
+{
+    return leaf_node_count() + internal_node_count();
+}
+
+unsigned Tree::average_string_depth() const
+{
+    return 1; // todo
+}
+
+unsigned Tree::deepest_string_depth() const
+{
+    return 1; // todo 
+}
+
 }
