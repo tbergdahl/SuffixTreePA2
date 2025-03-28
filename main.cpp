@@ -80,8 +80,8 @@ int main(int argc, char *argv[])
     std::string cur_dir = fs::current_path().string();
     std::string test_dir = path_char + std::string("Tests") + path_char + std::string("TestData") + path_char;
 
-    std::string fasta_filename    = cur_dir + test_dir + "Human-BRCA2-cds.fasta";
-    std::string alphabet_filename = cur_dir + test_dir + "English_alphabet.txt";
+    std::string fasta_filename    = cur_dir + test_dir + "chr12.fas";
+    std::string alphabet_filename = cur_dir + test_dir + "DNA_alphabet.txt";
 
     if(argc > 1)
     {
