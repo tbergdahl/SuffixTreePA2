@@ -102,7 +102,18 @@ unsigned Tree::deepest_string_depth() const
     return max_depth;
 }
 
-// display child 
+void Tree::display_children(Node* node) const
+{
+    if(node)
+    {
+        for (auto const& it : node->children)
+        {
+            Node* child = it.second;
+            std::cout << "Child (start index: " << std::to_string(child->start) << ", end index: " << std::to_string(child->end) << ") = " << user_input.substr(child->start, (child->end - child->start + 1)) << std::endl
+            << "String Depth: " << std::to_string(child->string_depth) << std::endl;
+        }
+    }
+}
 
 // BWT_index
 

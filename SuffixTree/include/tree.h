@@ -7,6 +7,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <stack>
 
 namespace SuffixTree
 {
@@ -16,7 +17,9 @@ public:
     // Create a suffix tree given an input string. Returns an empty tree if the input contains a character not in the input alphabet.
     static Tree build(std::string const& str, std::string const& alphabet);
 
-    // not sure
+    void display_children(Node* node) const;
+
+    // print all nodes and their string depth
     void enumerate_nodes() const;
 
     // creates a bwt for the current tree
@@ -33,10 +36,6 @@ public:
     unsigned average_string_depth() const;
 
     unsigned deepest_string_depth() const;
-
-    
-
-    
 
 private:
     Tree();
@@ -60,17 +59,18 @@ private:
     static void reset();
 
     void dfs_helper(const Node* node, std::vector<unsigned>& depths) const;
+
     Node* root;
 
     unsigned num_leaf_nodes = 0;
     unsigned num_internal_nodes = 0;
 
-    std::string user_input; // for testing
+    std::string user_input;
+
     void collect_Suffix_Indices_Helper(Node* node, std::vector<int>& indices) const;
     std::vector<int> collect_Suffix_Indices() const;
     
-    // take a node star and perform traversal and printing
-
+    // private enumerate fn called by public enumerate
     void enumerate(const Node* node) const;
 
 };
