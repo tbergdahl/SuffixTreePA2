@@ -28,11 +28,6 @@ void Tree::enumerate_nodes() const
     // todo
 }
 
-void Tree::bwt_for(std::string const& str) const
-{
-    // todo
-}
-
 unsigned Tree::leaf_node_count() const
 {
     return num_leaf_nodes;

@@ -150,7 +150,7 @@ void Tree::find_path(Node* u, const std::string& s, int index)
 
 // Inside the Tree class implementation in "tree.cpp" or your existing file
 
-std::string Tree::computeBWT(const std::string& s) {
+std::string Tree::computeBWT(const std::string& s) const {
     std::vector<int> suffixArray = collectSuffixIndices();
     std::string bwt;
     int n = s.length();

@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 namespace SuffixTree
 {
@@ -19,7 +20,7 @@ public:
     void enumerate_nodes() const;
 
     // creates a bwt for the current tree
-    void bwt_for(std::string const& str) const;
+    std::string computeBWT(const std::string& s) const;
 
     // returns the number of leaf nodes in the tree
     unsigned leaf_node_count() const;

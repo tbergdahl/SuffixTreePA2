@@ -110,5 +110,4 @@ int main(int argc, char *argv[])
     auto tree = Tree::build(pair.second, pair.first);
     std::cout << "Leaf Count: " << std::to_string(tree.leaf_node_count()) << std::endl << "Internal Node Count: " << std::to_string(tree.internal_node_count()) << std::endl;
     return 0;
-    
 }
