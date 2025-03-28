@@ -1,6 +1,6 @@
 #include "parse.h"
 #include <utility>
-
+#include <stdexcept>
 
 
 namespace ParseFasta
@@ -35,7 +35,7 @@ Seq_alph_pair parse(std::string const& filename, std::string const& alphabet_fil
         } 
         else 
         {
-            throw std::exception("File did not open");
+            throw std::runtime_error("File did not open");
         }
     }
     else
@@ -65,7 +65,7 @@ Seq_alph_pair parse(std::string const& filename, std::string const& alphabet_fil
     } 
     else 
     {
-        throw std::exception("File did not open");
+        throw std::runtime_error("File did not open");
     }
 
     return output;

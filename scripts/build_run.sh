@@ -9,8 +9,13 @@ if [ ! -d "$BUILD_DIR" ]; then
   mkdir "$BUILD_DIR"
 fi
 
+
+cd build
+
 cmake ..
+cd ..
+cmake --build build
 
-cmake --build "$BUILD_DIR"
+./build/PA2 
 
-./$BUILD_DIR/PA2 
+

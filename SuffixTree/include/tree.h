@@ -58,6 +58,7 @@ private:
     Node* root;
 
     unsigned num_leaf_nodes = 0;
+    unsigned num_internal_nodes = 0;
 
     std::string user_input; // for testing
     void collectSuffixIndicesHelper(Node* node, std::vector<int>& indices);

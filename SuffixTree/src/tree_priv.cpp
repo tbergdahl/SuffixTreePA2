@@ -146,48 +146,48 @@ void Tree::find_path(Node* u, const std::string& s, int index)
             break;
         }
     }
+}
 
-    // Inside the Tree class implementation in "tree.cpp" or your existing file
+// Inside the Tree class implementation in "tree.cpp" or your existing file
 
-    std::string Tree::computeBWT(const std::string& s) {
-        std::vector<int> suffixArray = collectSuffixIndices();
-        std::string bwt;
-        int n = s.length();
-        
-        bool has_terminator = (s.back() == '$');
-        int terminator_pos = has_terminator ? n-1 : n;
-        
-        for (int index : suffixArray) {
-            int bwtIndex = (index - 1 + n) % n;
-            // Skip adding terminator if it wasn't in original string
-            if (!has_terminator && bwtIndex == terminator_pos) {
-                bwt.push_back('$');
-            } else {
-                bwt.push_back(s[bwtIndex]);
-            }
-        }
-        return bwt;
-    }
-
-    void Tree::collectSuffixIndicesHelper(Node* node, std::vector<int>& indices) {
-        if (node->end == -1) { 
-            // Only collect if not the root and valid suffix
-            if (node != root && node->suffixIndex >= 0) {
-                indices.push_back(node->suffixIndex);
-            }
-            return;
-        }
-        // Traverse children in lex order (edges are sorted via std::map)
-        for (const auto& child : node->children) {
-            collectSuffixIndicesHelper(child.second, indices);
+std::string Tree::computeBWT(const std::string& s) {
+    std::vector<int> suffixArray = collectSuffixIndices();
+    std::string bwt;
+    int n = s.length();
+    
+    bool has_terminator = (s.back() == '$');
+    int terminator_pos = has_terminator ? n-1 : n;
+    
+    for (int index : suffixArray) {
+        int bwtIndex = (index - 1 + n) % n;
+        // Skip adding terminator if it wasn't in original string
+        if (!has_terminator && bwtIndex == terminator_pos) {
+            bwt.push_back('$');
+        } else {
+            bwt.push_back(s[bwtIndex]);
         }
     }
+    return bwt;
+}
 
-    std::vector<int> Tree::collectSuffixIndices() {
-        std::vector<int> indices;
-        collectSuffixIndicesHelper(root, indices);
-        return indices;
+void Tree::collectSuffixIndicesHelper(Node* node, std::vector<int>& indices) {
+    if (node->end == -1) { 
+        // Only collect if not the root and valid suffix
+        if (node != root && node->suffix_index >= 0) {
+            indices.push_back(node->suffix_index);
+        }
+        return;
     }
+    // Traverse children in lex order (edges are sorted via std::map)
+    for (const auto& child : node->children) {
+        collectSuffixIndicesHelper(child.second, indices);
+    }
+}
+
+std::vector<int> Tree::collectSuffixIndices() {
+    std::vector<int> indices;
+    collectSuffixIndicesHelper(root, indices);
+    return indices;
 }
 
 void Tree::insert_suffix(const std::string& input, int pos)

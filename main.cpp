@@ -10,9 +10,6 @@
 using namespace SuffixTree;
 using namespace ParseFasta;
 
-constexpr char *TEST_DIR = "\\Tests\\TestData\\";
-
-
 namespace fs = std::filesystem;
 
 void measure_construction_performance(const std::string& test_dir) {
@@ -75,19 +72,29 @@ void measure_construction_performance(const std::string& test_dir) {
 
 int main(int argc, char *argv[])
 {
-    std::string cur_dir = std::filesystem::current_path().string();
+    char path_char;
+    #if defined(_WIN32)
+        path_char = '\\';
+    #else 
+        path_char = '/';
+    #endif
+
+    std::string cur_dir = fs::current_path().string();
+    std::string test_dir = path_char + std::string("Tests") + path_char + std::string("TestData") + path_char;
 
     // default to mississipi file
-    std::string fasta_filename    = cur_dir + TEST_DIR + "s2.fas";
-    std::string alphabet_filename = cur_dir + TEST_DIR + "English_alphabet.txt";
+    std::string fasta_filename    = cur_dir + test_dir + "s2.fas";
+    std::string alphabet_filename = cur_dir + test_dir + "English_alphabet.txt";
 
+    std::cout << fasta_filename;
+    
     if(argc > 1) // fasta file arg exists
     {
-        fasta_filename    = cur_dir + TEST_DIR + std::string(argv[1]);
+        fasta_filename    = cur_dir + test_dir + std::string(argv[1]);
     }
     if(argc > 2) // alphabet filename exists
     {
-        alphabet_filename = cur_dir + TEST_DIR + std::string(argv[2]);
+        alphabet_filename = cur_dir + test_dir + std::string(argv[2]);
     }
 
     Seq_alph_pair pair;
@@ -104,6 +111,4 @@ int main(int argc, char *argv[])
     std::cout << "Leaf Count: " << std::to_string(tree.leaf_node_count()) << std::endl << "Internal Node Count: " << std::to_string(tree.internal_node_count()) << std::endl;
     return 0;
     
-
-  
 }
