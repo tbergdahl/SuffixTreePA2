@@ -148,10 +148,10 @@ void Tree::find_path(Node* u, const std::string& s, int index)
     }
 }
 
-// Inside the Tree class implementation in "tree.cpp" or your existing file
 
-std::string Tree::computeBWT(const std::string& s) const {
-    std::vector<int> suffixArray = collectSuffixIndices();
+
+std::string Tree::compute_BWT(const std::string& s) const {
+    std::vector<int> suffixArray = collect_Suffix_Indices();
     std::string bwt;
     int n = s.length();
     
@@ -160,7 +160,6 @@ std::string Tree::computeBWT(const std::string& s) const {
     
     for (int index : suffixArray) {
         int bwtIndex = (index - 1 + n) % n;
-        // Skip adding terminator if it wasn't in original string
         if (!has_terminator && bwtIndex == terminator_pos) {
             bwt.push_back('$');
         } else {
@@ -170,7 +169,7 @@ std::string Tree::computeBWT(const std::string& s) const {
     return bwt;
 }
 
-void Tree::collectSuffixIndicesHelper(Node* node, std::vector<int>& indices) const{
+void Tree::collect_Suffix_Indices_Helper(Node* node, std::vector<int>& indices) const{
     if (node->end == -1) { 
         // Only collect if not the root and valid suffix
         if (node != root && node->suffix_index >= 0) {
@@ -180,13 +179,13 @@ void Tree::collectSuffixIndicesHelper(Node* node, std::vector<int>& indices) con
     }
     // Traverse children in lex order (edges are sorted via std::map)
     for (const auto& child : node->children) {
-        collectSuffixIndicesHelper(child.second, indices);
+        collect_Suffix_Indices_Helper(child.second, indices);
     }
 }
 
-std::vector<int> Tree::collectSuffixIndices() const {
+std::vector<int> Tree::collect_Suffix_Indices() const {
     std::vector<int> indices;
-    collectSuffixIndicesHelper(root, indices);
+    collect_Suffix_Indices_Helper(root, indices);
     return indices;
 }
 
@@ -280,4 +279,37 @@ void Tree::display(Node* node, const std::string& orig_str, int indent)
         }
     }
 }
+
+
+void Tree::enumerate(const Node* node) const {
+    if (!node) return;
+    
+    // Print current node information
+    std::cout << "Node at depth " << node->string_depth << ": ";
+    
+    if (node == root) {
+        std::cout << "[ROOT]";
+    } 
+    else if (node->end == -1) {
+        std::cout << "LEAF (suffix index: " << node->suffix_index << ")";
+    } 
+    else {
+        std::cout << "INTERNAL (edge: [" << node->start << "," 
+                  << (node->end == -1 ? "∞" : std::to_string(node->end)) << "])";
+    }
+    
+    // Print suffix link if exists
+    if (node->suffix_link && node->suffix_link != root) {
+        std::cout << " → SL to depth " << node->suffix_link->string_depth;
+    }
+    
+    std::cout << std::endl;
+    
+    // Recursively process children in order
+    for (const auto& child : node->children) {
+        enumerate(child.second);
+    }
+}
+
+
 }

@@ -78,10 +78,10 @@ int main(int argc, char *argv[])
     std::string cur_dir = fs::current_path().string();
     std::string test_dir = path_char + std::string("Tests") + path_char + std::string("TestData") + path_char;
 
-    measure_construction_performance(cur_dir + test_dir);
+    //measure_construction_performance(cur_dir + test_dir);
 
     // default to mississipi file
-    std::string fasta_filename    = cur_dir + test_dir + "s2.fas";
+    std::string fasta_filename    = cur_dir + test_dir + "Covid_Brazil.fasta";
     std::string alphabet_filename = cur_dir + test_dir + "English_alphabet.txt";
 
     
@@ -104,7 +104,27 @@ int main(int argc, char *argv[])
         pair = parse(fasta_filename, alphabet_filename);
     }
 
+    std::cout << pair.first;
+    std::cout << pair.second;
+
+    
+
     auto tree = Tree::build(pair.second, pair.first);
     std::cout << "Leaf Count: " << std::to_string(tree.leaf_node_count()) << std::endl << "Internal Node Count: " << std::to_string(tree.internal_node_count()) << std::endl;
+    std::cout << "average string depth: " << std::to_string(tree.average_string_depth()) << std::endl;
+    std::cout << "Deepest string depth: " << std::to_string(tree.deepest_string_depth()) << std::endl;
+    tree.enumerate_nodes();
+
+
+
+    //std::string terminated_reference = pair.second + "$";
+    //std::string bwt = tree.compute_BWT(terminated_reference);
+    //std::cout << "\nBWT for \"" << bwt << std::endl;
+  
+    
+    
+
+
     return 0;
+
 }

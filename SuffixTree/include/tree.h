@@ -20,7 +20,7 @@ public:
     void enumerate_nodes() const;
 
     // creates a bwt for the current tree
-    std::string computeBWT(const std::string& s) const;
+    std::string compute_BWT(const std::string& s) const;
 
     // returns the number of leaf nodes in the tree
     unsigned leaf_node_count() const;
@@ -33,6 +33,10 @@ public:
     unsigned average_string_depth() const;
 
     unsigned deepest_string_depth() const;
+
+    
+
+    
 
 private:
     Tree();
@@ -55,15 +59,20 @@ private:
     // resets above static
     static void reset();
 
-
+    void dfs_helper(const Node* node, std::vector<unsigned>& depths) const;
     Node* root;
 
     unsigned num_leaf_nodes = 0;
     unsigned num_internal_nodes = 0;
 
     std::string user_input; // for testing
-    void collectSuffixIndicesHelper(Node* node, std::vector<int>& indices) const;
-    std::vector<int> collectSuffixIndices() const;
+    void collect_Suffix_Indices_Helper(Node* node, std::vector<int>& indices) const;
+    std::vector<int> collect_Suffix_Indices() const;
+    
+    // take a node star and perform traversal and printing
+
+    void enumerate(const Node* node) const;
+
 };
 
 }
