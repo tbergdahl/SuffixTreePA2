@@ -12,6 +12,9 @@ using namespace ParseFasta;
 
 namespace fs = std::filesystem;
 
+/*
+
+
 void measure_construction_performance(const std::string& test_dir) 
 {
     std::ofstream outfile("performance_metrics.txt");
@@ -63,7 +66,7 @@ void measure_construction_performance(const std::string& test_dir)
     outfile.close();
 }
 
-
+*/
 
 int main(int argc, char *argv[])
 {
@@ -119,7 +122,7 @@ int main(int argc, char *argv[])
     output_file.close();
 
 
-
+    //measure_construction_performance();
     std::cout << "Leaf Count: " << std::to_string(tree.leaf_node_count()) << std::endl << "Internal Node Count: " << std::to_string(tree.internal_node_count()) << std::endl;
     std::cout << "average string depth: " << std::to_string(tree.average_string_depth()) << std::endl;
     std::cout << "Deepest string depth: " << std::to_string(tree.deepest_string_depth()) << std::endl;
