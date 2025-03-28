@@ -62,8 +62,8 @@ private:
     unsigned num_internal_nodes = 0;
 
     std::string user_input; // for testing
-    void collectSuffixIndicesHelper(Node* node, std::vector<int>& indices);
-    std::vector<int> collectSuffixIndices();
+    void collectSuffixIndicesHelper(Node* node, std::vector<int>& indices) const;
+    std::vector<int> collectSuffixIndices() const;
 };
 
 }

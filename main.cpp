@@ -86,7 +86,6 @@ int main(int argc, char *argv[])
     std::string fasta_filename    = cur_dir + test_dir + "s2.fas";
     std::string alphabet_filename = cur_dir + test_dir + "English_alphabet.txt";
 
-    std::cout << fasta_filename;
     
     if(argc > 1) // fasta file arg exists
     {

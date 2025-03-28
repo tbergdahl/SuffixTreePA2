@@ -170,7 +170,7 @@ std::string Tree::computeBWT(const std::string& s) const {
     return bwt;
 }
 
-void Tree::collectSuffixIndicesHelper(Node* node, std::vector<int>& indices) {
+void Tree::collectSuffixIndicesHelper(Node* node, std::vector<int>& indices) const{
     if (node->end == -1) { 
         // Only collect if not the root and valid suffix
         if (node != root && node->suffix_index >= 0) {
@@ -184,7 +184,7 @@ void Tree::collectSuffixIndicesHelper(Node* node, std::vector<int>& indices) {
     }
 }
 
-std::vector<int> Tree::collectSuffixIndices() {
+std::vector<int> Tree::collectSuffixIndices() const {
     std::vector<int> indices;
     collectSuffixIndicesHelper(root, indices);
     return indices;
