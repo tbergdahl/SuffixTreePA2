@@ -43,3 +43,4 @@ target_link_libraries(PA2 PRIVATE
 # Add subdirectories for SuffixTree, ParseFasta, and Tests
 add_subdirectory(SuffixTree)
 add_subdirectory(ParseFasta)
+add_subdirectory(Tests)
