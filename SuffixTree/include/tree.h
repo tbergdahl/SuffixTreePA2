@@ -22,17 +22,17 @@ public:
     void bwt_for(std::string const& str) const;
 
     // returns the number of leaf nodes in the tree
-    unsigned leaf_node_count() const
-    {
-        return num_leaf_nodes;
-    }
+    unsigned leaf_node_count() const;
 
     // returns the number of internal nodes in the tree
-    unsigned internal_node_count() const
-    {
-        return num_internal_nodes;
-    }
-    std::string computeBWT(const std::string& s);
+    unsigned internal_node_count() const;
+
+    unsigned total_node_count() const;
+
+    unsigned average_string_depth() const;
+
+    unsigned deepest_string_depth() const;
+
 private:
     Tree();
 

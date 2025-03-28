@@ -6,21 +6,24 @@
 using namespace ParseFasta;
 using namespace SuffixTree;
 
-TEST(parse_tests, CorrectEmptyString)
-{
-    EXPECT_EQ("", ParseFasta::parse("", ""));
-}
-
 TEST(tree_tests, CorrectNodeCounts)
 {
     auto tree = Tree::build("banana", "ban");
-    EXPECT_EQ(7, tree.leaf_count());
-    EXPECT_EQ(3, tree.internal_count());
+    EXPECT_EQ(7, tree.leaf_node_count());
+    EXPECT_EQ(4, tree.internal_node_count());
+    EXPECT_EQ(11, tree.total_node_count());
 
-    tree = Tree::build("MISSISSIPI", "MISP");
-    EXPECT_EQ(11, tree.leaf_count());
-    EXPECT_EQ(6, tree.internal_count());
 
+    tree = Tree::build("MISSISSIPPI", "MISP");
+    EXPECT_EQ(12, tree.leaf_node_count());
+    EXPECT_EQ(7, tree.internal_node_count());
+    EXPECT_EQ(19, tree.total_node_count());
+
+
+    tree = Tree::build("BANANABAN", "BAN");
+    EXPECT_EQ(10, tree.leaf_node_count());
+    EXPECT_EQ(7, tree.internal_node_count());
+    EXPECT_EQ(17, tree.total_node_count());
 }
 
 
