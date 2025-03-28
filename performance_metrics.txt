@@ -1,0 +1,17 @@
+
+Suffix Tree Construction Performance Report
+========================================================================
+| File Name                        | Length (bp) | Time (ms) | Nodes   |
+|----------------------------------|-------------|-----------|-------- |
+|               chr12.fas          |     1078175 |    459914 | 1777696 |
+|   Covid_Australia.fasta          |       29893 |       420 | 48985   |
+|      Covid_Brazil.fasta          |       29876 |       414 | 48948   |
+|       Covid_India.fasta          |       29854 |       420 | 48915   |
+|     Covid_USA-CA4.fasta          |       29882 |       412 | 48958   |
+|       Covid_Wuhan.fasta          |       29903 |       408 | 49003   |
+|   Human-BRCA2-cds.fasta          |       11382 |       105 | 18683   |
+| Opsin1_colorblindness_gene.fasta |        7145 |        57 | 11855   |
+|                  s1.fas          |           6 |         0 |    11   |
+|                  s2.fas          |          11 |         0 |    19   |
+|               Slyco.fas          |      155461 |     15415 | 254435  |
+========================================================================

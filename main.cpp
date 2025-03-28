@@ -12,60 +12,56 @@ using namespace ParseFasta;
 
 namespace fs = std::filesystem;
 
-void measure_construction_performance(const std::string& test_dir) {
-    // Header for performance report
-    std::cout << "\nSuffix Tree Construction Performance Report\n";
-    std::cout << "==========================================\n";
-    std::cout << "| File Name               | Length (bp) | Time (ms) | Memory (KB) | Nodes |\n";
-    std::cout << "|-------------------------|-------------|-----------|-------------|-------|\n";
+void measure_construction_performance(const std::string& test_dir) 
+{
+    std::ofstream outfile("performance_metrics.txt");
 
-    // Process each FASTA file in test directory
-    for (const auto& entry : fs::directory_iterator(test_dir)) {
-        if (entry.is_regular_file() && 
-            entry.path().extension() == ".fasta" && 
-            entry.path().string().find(".BWT.") == std::string::npos) {
+    if (!outfile.is_open()) {
+        std::cerr << "Error opening file for writing\n";
+        return;
+    }
+
+    outfile << "\nSuffix Tree Construction Performance Report\n";
+    outfile << "========================================================================\n";
+    outfile << "| File Name                          | Length (bp) | Time (ms) | Nodes |\n";
+    outfile << "|------------------------------------|-------------|-----------|-------|\n";
+
+    std::string alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    for (const auto& entry : fs::directory_iterator(test_dir)) 
+    {
+        if (entry.is_regular_file() && (entry.path().extension() == ".fas" || entry.path().extension() == ".fasta")) {
+            std::string fasta_filename = entry.path().string();
+
+            Seq_alph_pair pair = parse(fasta_filename);
+
+            auto start_time = std::chrono::high_resolution_clock::now();
             
-            try {
-                // Read FASTA file
-                std::ifstream input_file(entry.path());
-                //std::string sequence = ParseFasta::read_sequence(input_file) + "$"; // Add terminator
-                input_file.close();
+            auto tree = Tree::build(pair.second, alphabet);
 
-                // Get alphabet (simplified - adjust as needed)
-                std::string alphabet = "ACGT$"; // Default for DNA
-                if (entry.path().stem().string().find("English") != std::string::npos) {
-                    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ$";
-                }
+            auto end_time = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
 
-                // Measure construction
-                auto start = std::chrono::high_resolution_clock::now();
-                // auto tree = SuffixTree::Tree::build(sequence, alphabet);
-                auto end = std::chrono::high_resolution_clock::now();
-                auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+            
+            size_t sequence_length = pair.second.length();
 
-                // Get memory usage (Linux-specific example)
-                long mem_usage = 0;
-                #ifdef __linux__
-                    std::ifstream statm("/proc/self/statm");
-                    if (statm) {
-                        statm >> mem_usage;  // Get total program pages
-                        mem_usage *= sysconf(_SC_PAGESIZE) / 1024;  // Convert to KB
-                    }
-                #endif
+            
+            size_t leaf_nodes = tree.leaf_node_count();
+            size_t internal_nodes = tree.internal_node_count();
+            size_t total_nodes = leaf_nodes + internal_nodes;
 
-                // Print results
-                std::cout << "| " << std::setw(23) << entry.path().filename().string() 
-                          //<< " | " << std::setw(11) << sequence.length() - 1  // Exclude $
-                          << " | " << std::setw(9) << duration.count()
-                          << " | " << std::setw(11) << mem_usage
-                         //<< " | " << std::setw(5) << (tree.leaf_count() + tree.internal_count())
-                          << " |\n";
-
-            } catch (const std::exception& e) {
-                std::cerr << "Error processing " << entry.path() << ": " << e.what() << "\n";
-            }
+            
+            outfile << "| " << std::setw(23) << entry.path().filename().string()
+                    << " | " << std::setw(11) << sequence_length
+                    << " | " << std::setw(9) << duration
+                    << " | " << std::setw(5) << total_nodes
+                    << " |\n";
         }
     }
+
+    outfile << "========================================================================\n";
+
+    // Close the output file
+    outfile.close();
 }
 
 
@@ -81,6 +77,8 @@ int main(int argc, char *argv[])
 
     std::string cur_dir = fs::current_path().string();
     std::string test_dir = path_char + std::string("Tests") + path_char + std::string("TestData") + path_char;
+
+    measure_construction_performance(cur_dir + test_dir);
 
     // default to mississipi file
     std::string fasta_filename    = cur_dir + test_dir + "s2.fas";
