@@ -115,5 +115,28 @@ void Tree::display_children(Node* node) const
 }
 
 
+unsigned Tree::find_deepest_internal_node() const {
+    unsigned max_depth = 0;
+    std::stack<Node*> stack;
+    stack.push(root);
+    
+    while (!stack.empty()) {
+        Node* current = stack.top();
+        stack.pop();
+        // Check if the current node is an internal node
+        // meaing not a leaf and roots
+        if (current != root && current->end != -1) {
+            if (current->string_depth > max_depth) {
+                max_depth = current->string_depth;
+            }
+        }
+        for (const auto& child : current->children) {
+            stack.push(child.second);
+        }
+    }
+    
+    return max_depth;
+}
+
 
 }
