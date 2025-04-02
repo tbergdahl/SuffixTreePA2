@@ -133,6 +133,21 @@ int main(int argc, char *argv[])
     tree.enumerate_nodes();
    
 
+    auto res = align("ACATGCTACACGTATCCGATACCCCGTAACCGATAACGATACACAGACCTCGTACGCTTGCTACAACGTACTCTATAACCGAGAACGATTGACATGCCTCGTACACATGCTACACGTACTCCGAT", 
+          "ACATGCGACACTACTCCGATACCCCGTAACCGATAACGATACAGAGACCTCGTACGCTTGCTAATAACCGAGAACGATTGACATTCCTCGTACAGCTACACGTACTCCGAT", 
+          Alignment::AlignmentType::GLOBAL, 
+          {1, -1, -3, -1});
+
+
+    
+    std::cout << "Params: {Match Bonus: 1, Mismatch Bonus: -1, In. Gap Penalty: -3, Gap Penalty: -1}\n";
+    std::cout << "Score: " << res.score << std::endl;
+    std::cout << "# of Matches: " << res.match_count << std::endl;
+    std::cout << "# of Mismatches: " << res.mismatch_count << std::endl;
+    std::cout << "# of Gaps: " << res.gap_count << std::endl;
+    std::cout << "# of Opening Gaps: " << res.opening_gap_count << std::endl;
+    
+
     return 0;
 
 }

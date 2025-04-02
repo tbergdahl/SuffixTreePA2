@@ -5,15 +5,15 @@
 
 
 using Params = Alignment::AlignmentParams;
+using Result = Alignment::AlignmentResult;
 
-
-void local_align (std::string const& seq1, std::string const& seq2, Params const& params);
-void global_align(std::string const& seq1, std::string const& seq2, Params const& params);
+Result local_align (std::string const& seq1, std::string const& seq2, Params const& params);
+Result global_align(std::string const& seq1, std::string const& seq2, Params const& params);
 
 namespace Alignment
 {
 // public alignment method
-void align(std::string const& seq1, std::string const& seq2, AlignmentType const& type, Params const& params)
+Result align(std::string const& seq1, std::string const& seq2, AlignmentType const& type, AlignmentParams const& params)
 {
     switch(type)
     {
