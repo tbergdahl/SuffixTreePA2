@@ -6,7 +6,7 @@ target_link_libraries(my_tests PRIVATE
     gtest
     gtest_main
     SuffixTree
-    ParseFasta
+    parsefasta
     )
 
 enable_testing()

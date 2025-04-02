@@ -19,28 +19,31 @@ set(PROJECT_ROOT_DIR ${CMAKE_SOURCE_DIR})
 add_executable(PA2 main.cpp)
 
 # Constants for project directories for submodules
-set(SUFFIX_TREE_DIR ${PROJECT_ROOT_DIR}/SuffixTree)
-set(PARSE_FASTA_DIR ${PROJECT_ROOT_DIR}/ParseFasta)
+set(SUFFIX_TREE_DIR ${PROJECT_ROOT_DIR}/suffixtree)
+set(PARSE_FASTA_DIR ${PROJECT_ROOT_DIR}/parsefasta)
+set(ALIGNMENT_DIR   ${PROJECT_ROOT_DIR}/alignment)
 
 # Include directories variables
-set(SUFFIX_TREE_INCLUDE ${SUFFIX_TREE_DIR}/include)
-set(PARSE_FASTA_INCLUDE ${PARSE_FASTA_DIR}/include)
+set(SUFFIX_TREE_INCLUDE     ${SUFFIX_TREE_DIR}/include)
+set(PARSE_FASTA_INCLUDE     ${PARSE_FASTA_DIR}/include)
+set(ALIGNMENT_INCLUDE ${ALIGNMENT_DIR}/include)
 
 # Include directories for PA2
 target_include_directories(PA2 PRIVATE
     ${SUFFIX_TREE_INCLUDE}
     ${PARSE_FASTA_INCLUDE}
+    ${ALIGNMENT_INCLUDE}
 )
 
-# Link libraries (Static libraries for SuffixTree and ParseFasta)
+# Link libraries
 target_link_libraries(PA2 PRIVATE
-    SuffixTree
-    ParseFasta
+    suffixtree
+    parsefasta
+    alignment
 )
-
-
 
 # Add subdirectories for SuffixTree, ParseFasta, and Tests
-add_subdirectory(SuffixTree)
-add_subdirectory(ParseFasta)
+add_subdirectory(suffixtree)
+add_subdirectory(parsefasta)
+add_subdirectory(alignment)
 #add_subdirectory(Tests)

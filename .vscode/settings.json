@@ -90,6 +90,8 @@
         "print": "cpp",
         "queue": "cpp",
         "stack": "cpp",
-        "string_view": "cpp"
+        "string_view": "cpp",
+        "filesystem": "cpp",
+        "ranges": "cpp"
     }
 }

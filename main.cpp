@@ -1,5 +1,7 @@
 #include "tree.h"
 #include "parse.h"
+#include "align.h"
+
 #include <chrono>
 #include <filesystem>
 #include <fstream>
@@ -9,6 +11,7 @@
 
 using namespace SuffixTree;
 using namespace ParseFasta;
+using namespace Alignment;
 
 namespace fs = std::filesystem;
 
@@ -78,10 +81,10 @@ int main(int argc, char *argv[])
     #endif
 
     std::string cur_dir = fs::current_path().string();
-    std::string test_dir = path_char + std::string("Tests") + path_char + std::string("TestData") + path_char;
+    std::string test_dir = path_char + std::string("tests") + path_char + std::string("TestData") + path_char;
 
-    std::string fasta_filename    = cur_dir + test_dir + "chr12.fas";
-    std::string alphabet_filename = cur_dir + test_dir + "DNA_alphabet.txt";
+    std::string fasta_filename    = cur_dir + test_dir + "s1.fas";
+    std::string alphabet_filename = cur_dir + test_dir + "English_alphabet.txt";
 
     if(argc > 1)
     {
@@ -129,8 +132,6 @@ int main(int argc, char *argv[])
     tree.enumerate_nodes();
    
 
+    return 0;
 
-
-        return 0;
-
-    }
+}
