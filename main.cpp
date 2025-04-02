@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
     std::string cur_dir = fs::current_path().string();
     std::string test_dir = path_char + std::string("tests") + path_char + std::string("TestData") + path_char;
 
-    std::string fasta_filename    = cur_dir + test_dir + "s1.fas";
+    std::string fasta_filename    = cur_dir + test_dir + "s2.fas";
     std::string alphabet_filename = cur_dir + test_dir + "English_alphabet.txt";
 
     if(argc > 1)
@@ -129,6 +129,7 @@ int main(int argc, char *argv[])
     std::cout << "Leaf Count: " << std::to_string(tree.leaf_node_count()) << std::endl << "Internal Node Count: " << std::to_string(tree.internal_node_count()) << std::endl;
     std::cout << "average string depth: " << std::to_string(tree.average_string_depth()) << std::endl;
     std::cout << "Deepest string depth: " << std::to_string(tree.deepest_string_depth()) << std::endl;
+    std::cout << "Exact matching repeat: " << std::to_string(tree.find_deepest_internal_node()) << std::endl;
     tree.enumerate_nodes();
    
 

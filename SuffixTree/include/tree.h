@@ -36,7 +36,7 @@ public:
     unsigned deepest_string_depth() const;
 
     
-
+    unsigned find_deepest_internal_node() const;
     
 
 private:
@@ -73,7 +73,7 @@ private:
 
 
     
-  
+    
     void enumerate(const Node* node) const;
     
     void collect_leaf_substrings(const Node* node, std::string current_str, std::multimap<std::string, int>& substring_map) const;
