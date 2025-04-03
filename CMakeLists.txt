@@ -26,7 +26,7 @@ set(ALIGNMENT_DIR   ${PROJECT_ROOT_DIR}/alignment)
 # Include directories variables
 set(SUFFIX_TREE_INCLUDE     ${SUFFIX_TREE_DIR}/include)
 set(PARSE_FASTA_INCLUDE     ${PARSE_FASTA_DIR}/include)
-set(ALIGNMENT_INCLUDE ${ALIGNMENT_DIR}/include)
+set(ALIGNMENT_INCLUDE       ${ALIGNMENT_DIR}/include)
 
 # Include directories for PA2
 target_include_directories(PA2 PRIVATE

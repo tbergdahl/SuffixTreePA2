@@ -71,6 +71,30 @@ void measure_construction_performance(const std::string& test_dir)
 
 */
 
+void printAlignedSequences(const std::string& seq1, const std::string& seq2, const std::string& aligned_seq1, const std::string& aligned_seq2) {
+    // Print the sequence information
+    std::cout << "Sequence 1 = \"" << seq1 << "\", length = " << seq1.length() << " characters\n";
+    std::cout << "Sequence 2 = \"" << seq2 << "\", length = " << seq2.length() << " characters\n";
+
+    // Calculate and print the aligned sequences in chunks
+    for (size_t i = 0; i < aligned_seq1.length(); i += 60) {
+        // Print 60 characters at a time
+        std::cout << "s1 " << i + 1 << " " << aligned_seq1.substr(i, 60) << std::endl;
+        std::cout << "s2 " << i + 1 << " " << aligned_seq2.substr(i, 60) << std::endl;
+
+        // Print the middle line with | for matches and spaces for mismatches
+        std::string match_line = "";
+        for (size_t j = i; j < std::min(i + 60, aligned_seq1.length()); ++j) {
+            if (aligned_seq1[j] == aligned_seq2[j] && aligned_seq1[j] != '-') {
+                match_line += '|';  // Match
+            } else {
+                match_line += ' ';  // Mismatch or gap
+            }
+        }
+        std::cout << match_line << std::endl;
+    }
+}
+
 int main(int argc, char *argv[])
 {
     char path_char;
@@ -132,21 +156,24 @@ int main(int argc, char *argv[])
     std::cout << "Exact matching repeat: " << std::to_string(tree.find_deepest_internal_node()) << std::endl;
     tree.enumerate_nodes();
    
+    std::string s1 = "ACATGCTACACGTATCCGATACCCCGTAACCGATAACGATACACAGACCTCGTACGCTTGCTACAACGTACTCTATAACCGAGAACGATTGACATGCCTCGTACACATGCTACACGTACTCCGAT";
+    std::string s2 = "ACATGCGACACTACTCCGATACCCCGTAACCGATAACGATACAGAGACCTCGTACGCTTGCTAATAACCGAGAACGATTGACATTCCTCGTACAGCTACACGTACTCCGAT";
+    AlignmentParams params;
+    params.match_bonus = 1;
+    params.mismatch_penalty = -2;
+    params.h = -5;
+    params.g = -2;
 
-    auto res = align("ACATGCTACACGTATCCGATACCCCGTAACCGATAACGATACACAGACCTCGTACGCTTGCTACAACGTACTCTATAACCGAGAACGATTGACATGCCTCGTACACATGCTACACGTACTCCGAT", 
-          "ACATGCGACACTACTCCGATACCCCGTAACCGATAACGATACAGAGACCTCGTACGCTTGCTAATAACCGAGAACGATTGACATTCCTCGTACAGCTACACGTACTCCGAT", 
-          Alignment::AlignmentType::GLOBAL, 
-          {1, -1, -3, -1});
+    auto res = align(s1, s2, Alignment::AlignmentType::GLOBAL, params);
 
-
-    
-    std::cout << "Params: {Match Bonus: 1, Mismatch Bonus: -1, In. Gap Penalty: -3, Gap Penalty: -1}\n";
     std::cout << "Score: " << res.score << std::endl;
     std::cout << "# of Matches: " << res.match_count << std::endl;
     std::cout << "# of Mismatches: " << res.mismatch_count << std::endl;
     std::cout << "# of Gaps: " << res.gap_count << std::endl;
     std::cout << "# of Opening Gaps: " << res.opening_gap_count << std::endl;
     
+    printAlignedSequences(s1, s2, res.s1, res.s2);
+
 
     return 0;
 
