@@ -202,5 +202,10 @@ Result global_align(std::string const& seq1, std::string const& seq2, Params con
     }
 
     calc_table(table, seq1, seq2, params);
+
+    auto cell = table[seq1.length()][seq2.length()];
+
+    std::cout << "Score: " << max(cell.del_score, cell.ins_score, cell.sub_score);
+
     return backtrace(table, params, seq1, seq2, seq1.length(), seq2.length());
 }
