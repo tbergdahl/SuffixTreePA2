@@ -92,6 +92,7 @@
         "stack": "cpp",
         "string_view": "cpp",
         "filesystem": "cpp",
-        "ranges": "cpp"
+        "ranges": "cpp",
+        "__tree": "cpp"
     }
 }

@@ -284,34 +284,38 @@ void Tree::display(Node* node, const std::string& orig_str, int indent)
 }
 
 
-void Tree::enumerate(const Node* node) const {
-    if (!node) return;
+std::string Tree::enumerate(const Node* node) const {
+    if (!node) return "";
     
-    // Print current node information
-    std::cout << "Node at depth " << node->string_depth << ": ";
+    std::string result;
+    
+    // Build the node infos
+    result += "Node at depth " + std::to_string(node->string_depth) + ": ";
     
     if (node == root) {
-        std::cout << "[ROOT]";
+        result += "[ROOT]";
     } 
     else if (node->end == -1) {
-        std::cout << "LEAF (suffix index: " << node->suffix_index << ")";
+        result += "LEAF (suffix index: " + std::to_string(node->suffix_index) + ")";
     } 
     else {
-        std::cout << "INTERNAL (edge: [" << node->start << "," 
-                  << (node->end == -1 ? "∞" : std::to_string(node->end)) << "])";
+        result += "INTERNAL (edge: [" + std::to_string(node->start) + "," + 
+                 (node->end == -1 ? "∞" : std::to_string(node->end)) + "])";
     }
     
-    // Print suffix link if exists
+    // if there's a suffix link 
     if (node->suffix_link && node->suffix_link != root) {
-        std::cout << " → SL to depth " << node->suffix_link->string_depth;
+        result += " → SL to depth " + std::to_string(node->suffix_link->string_depth);
     }
     
-    std::cout << std::endl;
+    result += "\n";
     
-    // Recursively process children in order
+    // Recursively on every childrent 
     for (const auto& child : node->children) {
-        enumerate(child.second);
+        result += enumerate(child.second);
     }
+    
+    return result;
 }
 
 

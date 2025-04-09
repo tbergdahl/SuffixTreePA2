@@ -18,7 +18,7 @@ public:
 
     void display_children(Node* node) const;
 
-    void enumerate_nodes() const;
+    std::string enumerate_nodes() const;
 
     // creates a bwt for the current tree
     std::string compute_BWT(const std::string& s);
@@ -63,6 +63,7 @@ private:
     void dfs_helper(const Node* node, std::vector<unsigned>& depths) const;
 
     Node* root;
+    
 
     unsigned num_leaf_nodes = 0;
     unsigned num_internal_nodes = 0;
@@ -74,12 +75,18 @@ private:
 
     
     
-    void enumerate(const Node* node) const;
+    std::string enumerate(const Node* node) const;
     
     void collect_leaf_substrings(const Node* node, std::string current_str, std::multimap<std::string, int>& substring_map) const;
+   
+    
 
 };
 
+
+
 }
+
+
 
 #endif

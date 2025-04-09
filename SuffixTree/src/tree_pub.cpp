@@ -23,9 +23,8 @@ Tree Tree::build(std::string const& str, std::string const& alphabet)
     return tree;
 }
 
-void Tree::enumerate_nodes() const
-{
-    enumerate(root);
+std::string Tree::enumerate_nodes() const {
+    return enumerate(root);
 }
 
 unsigned Tree::leaf_node_count() const
@@ -44,6 +43,7 @@ unsigned Tree::total_node_count() const
     return leaf_node_count() + internal_node_count();
 }
 
+// 
 unsigned Tree::average_string_depth() const
 {
     if (internal_node_count() == 0) {
@@ -137,6 +137,10 @@ unsigned Tree::find_deepest_internal_node() const {
     
     return max_depth;
 }
+
+
+
+
 
 
 }

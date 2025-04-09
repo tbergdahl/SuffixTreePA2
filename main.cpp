@@ -15,7 +15,8 @@ using namespace Alignment;
 
 namespace fs = std::filesystem;
 
-/*
+
+
 
 
 void measure_construction_performance(const std::string& test_dir) 
@@ -69,7 +70,7 @@ void measure_construction_performance(const std::string& test_dir)
     outfile.close();
 }
 
-*/
+
 
 void printAlignedSequences(const std::string& seq1, const std::string& seq2, const std::string& aligned_seq1, const std::string& aligned_seq2) {
     // Print the sequence information
@@ -105,10 +106,10 @@ int main(int argc, char *argv[])
     #endif
 
     std::string cur_dir = fs::current_path().string();
-    std::string test_dir = path_char + std::string("tests") + path_char + std::string("TestData") + path_char;
+    std::string test_dir = path_char + std::string("tests") + path_char + std::string("TestData") +path_char ;
 
-    std::string fasta_filename    = cur_dir + test_dir + "s2.fas";
-    std::string alphabet_filename = cur_dir + test_dir + "English_alphabet.txt";
+    std::string fasta_filename    = cur_dir + test_dir + "Covid_Wuhan.fasta";
+    std::string alphabet_filename = cur_dir + test_dir + "DNA_alphabet.txt";
 
     if(argc > 1)
     {
@@ -132,6 +133,7 @@ int main(int argc, char *argv[])
     std::string output_filename = cur_dir + path_char + "output" + path_char + "outputs.txt";
     std::ofstream output_file(output_filename);
 
+
     if (!output_file.is_open()) {
         std::cerr << "Error: Unable to open file for writing: " << output_filename << std::endl;
         return 1;
@@ -140,21 +142,30 @@ int main(int argc, char *argv[])
     auto tree = Tree::build(pair.second, pair.first);
     std::string terminated_reference = pair.second + "$";
     std::string bwt2 = tree.compute_BWT(terminated_reference);
+    output_file << "Leaf Count: " << std::to_string(tree.leaf_node_count()) << std::endl << "Internal Node Count: " << std::to_string(tree.internal_node_count()) << std::endl;
+    output_file << "average string depth: " << std::to_string(tree.average_string_depth()) << std::endl;
+    output_file << "Deepest string depth: " << std::to_string(tree.deepest_string_depth()) << std::endl;
+    output_file << "Exact matching repeat: " << std::to_string(tree.find_deepest_internal_node()) << std::endl;
+    output_file << tree.enumerate_nodes() << std::endl;
 
+
+    
 
     for (char c : bwt2) {
         output_file << c << "\n";
+
+
     }
 
     output_file.close();
+   
 
-
-    //measure_construction_performance();
+    //measure_construction_performance( cur_dir + test_dir);
     std::cout << "Leaf Count: " << std::to_string(tree.leaf_node_count()) << std::endl << "Internal Node Count: " << std::to_string(tree.internal_node_count()) << std::endl;
     std::cout << "average string depth: " << std::to_string(tree.average_string_depth()) << std::endl;
     std::cout << "Deepest string depth: " << std::to_string(tree.deepest_string_depth()) << std::endl;
     std::cout << "Exact matching repeat: " << std::to_string(tree.find_deepest_internal_node()) << std::endl;
-    tree.enumerate_nodes();
+    //tree.enumerate_nodes();
    
     std::string s1 = "ACATGCTACACGTATCCGATACCCCGTAACCGATAACGATACACAGACCTCGTACGCTTGCTACAACGTACTCTATAACCGAGAACGATTGACATGCCTCGTACACATGCTACACGTACTCCGAT";
     std::string s2 = "ACATGCGACACTACTCCGATACCCCGTAACCGATAACGATACAGAGACCTCGTACGCTTGCTAATAACCGAGAACGATTGACATTCCTCGTACAGCTACACGTACTCCGAT";
@@ -171,7 +182,7 @@ int main(int argc, char *argv[])
     std::cout << "# of Mismatches: " << res.mismatch_count << std::endl;
     std::cout << "# of Gaps: " << res.gap_count << std::endl;
     std::cout << "# of Opening Gaps: " << res.opening_gap_count << std::endl;
-    
+
     printAlignedSequences(s1, s2, res.s1, res.s2);
 
 

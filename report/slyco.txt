@@ -1,3 +1,8 @@
+Leaf Count: 155462
+Internal Node Count: 98973
+average string depth: 8
+Deepest string depth: 155462
+Exact matching repeat: 48
 A
 A
 A

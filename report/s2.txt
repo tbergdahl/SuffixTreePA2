@@ -1,3 +1,10 @@
+Leaf Count: 12
+Internal Node Count: 7
+average string depth: 1
+Deepest string depth: 12
+Exact matching repeat: 4
+
+
 I
 P
 S

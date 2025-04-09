@@ -38,9 +38,10 @@ struct Node
     Node* parent;
 
     Node *suffix_link;
-
+    
     int string_depth;
 };
 }
+
 
 #endif
