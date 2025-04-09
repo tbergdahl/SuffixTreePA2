@@ -160,23 +160,23 @@ int main(int argc, char *argv[])
     std::cout << "Exact matching repeat: " << std::to_string(tree.find_deepest_internal_node()) << std::endl;
     //tree.enumerate_nodes();
    
-    std::string s1 = "ACATGCTACACGTATCCGATACCCCGTAACCGATAACGATACACAGACCTCGTACGCTTGCTACAACGTACTCTATAACCGAGAACGATTGACATGCCTCGTACACATGCTACACGTACTCCGAT";
-    std::string s2 = "ACATGCGACACTACTCCGATACCCCGTAACCGATAACGATACAGAGACCTCGTACGCTTGCTAATAACCGAGAACGATTGACATTCCTCGTACAGCTACACGTACTCCGAT";
-    AlignmentParams params;
-    params.match_bonus = 1;
-    params.mismatch_penalty = -2;
-    params.h = -5;
-    params.g = -2;
+    // std::string s1 = "ACATGCTACACGTATCCGATACCCCGTAACCGATAACGATACACAGACCTCGTACGCTTGCTACAACGTACTCTATAACCGAGAACGATTGACATGCCTCGTACACATGCTACACGTACTCCGAT";
+    // std::string s2 = "ACATGCGACACTACTCCGATACCCCGTAACCGATAACGATACAGAGACCTCGTACGCTTGCTAATAACCGAGAACGATTGACATTCCTCGTACAGCTACACGTACTCCGAT";
+    // AlignmentParams params;
+    // params.match_bonus = 1;
+    // params.mismatch_penalty = -2;
+    // params.h = -5;
+    // params.g = -2;
 
-    auto res = align(s1, s2, Alignment::AlignmentType::GLOBAL, params);
+    // auto res = align(s1, s2, Alignment::AlignmentType::GLOBAL, params);
 
-    std::cout << "Score: " << res.score << std::endl;
-    std::cout << "# of Matches: " << res.match_count << std::endl;
-    std::cout << "# of Mismatches: " << res.mismatch_count << std::endl;
-    std::cout << "# of Gaps: " << res.gap_count << std::endl;
-    std::cout << "# of Opening Gaps: " << res.opening_gap_count << std::endl;
+    // std::cout << "Score: " << res.score << std::endl;
+    // std::cout << "# of Matches: " << res.match_count << std::endl;
+    // std::cout << "# of Mismatches: " << res.mismatch_count << std::endl;
+    // std::cout << "# of Gaps: " << res.gap_count << std::endl;
+    // std::cout << "# of Opening Gaps: " << res.opening_gap_count << std::endl;
 
-    printAlignedSequences(s1, s2, res.s1, res.s2);
+    // printAlignedSequences(s1, s2, res.s1, res.s2);
 
 
     return 0;
