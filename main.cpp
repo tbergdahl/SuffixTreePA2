@@ -120,15 +120,8 @@ int main(int argc, char *argv[])
         alphabet_filename = cur_dir + test_dir + std::string(argv[2]);
     }
 
-    Seq_alph_pair pair;
-    if(alphabet_filename.empty())
-    {
-        pair = parse(fasta_filename);
-    }
-    else
-    {
-        pair = parse(fasta_filename, alphabet_filename);
-    }
+    Seq_alph_pair pair = parse(fasta_filename, alphabet_filename);
+    
 
     std::string output_filename = cur_dir + path_char + "output" + path_char + "outputs.txt";
     std::ofstream output_file(output_filename);
