@@ -18,6 +18,8 @@ public:
 
     void display_children(Node* node) const;
 
+    void insert(std::string const& str);
+
     std::string enumerate_nodes() const;
 
     // creates a bwt for the current tree

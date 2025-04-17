@@ -23,6 +23,14 @@ Tree Tree::build(std::string const& str, std::string const& alphabet)
     return tree;
 }
 
+void Tree::insert(std::string const& str)
+{
+    std::string input = str + ESCAPE_CHAR;
+    for (int i = 0; i < input.length(); i++) {
+        this->insert_suffix(input, i);
+    }
+}
+
 std::string Tree::enumerate_nodes() const {
     return enumerate(root);
 }

@@ -20,6 +20,7 @@ struct DPCell
     int sub_score = 0;
     int del_score = 0;
     int ins_score = 0;
+    int match_count = 0;
 };
 
 template<typename T>
@@ -73,6 +74,9 @@ void calc_table(Table& table, std::string const& seq1, std::string const& seq2, 
                     left.sub_score + params.h + params.g,
                     left.del_score + params.h + params.g)
             );
+
+            current.match_count = max(left.match_count, above.match_count, diagonal.match_count);
+            current.match_count += (seq1[i] == seq2[j]) ? 1 : 0;
         }
     }
 }
@@ -208,4 +212,50 @@ Result global_align(std::string const& seq1, std::string const& seq2, Params con
     std::cout << "Score: " << max(cell.del_score, cell.ins_score, cell.sub_score);
 
     return backtrace(table, params, seq1, seq2, seq1.length(), seq2.length());
+}
+
+namespace Alignment
+{
+int get_match_count(std::string const& seq1, std::string const& seq2, Params const& params)
+{
+    Table table = get_table(seq1.length() + 1, seq2.length() + 1);
+
+    table[0][0].sub_score = 0;
+    table[0][0].del_score = 0;
+    table[0][0].ins_score = 0;
+
+    for (int i = 1; i < table.size(); i++)
+    {
+        table[i][0].del_score = params.h + (i * params.g);
+        table[i][0].sub_score = -1e6;
+        table[i][0].ins_score = -1e6;
+    }
+    for (int j = 1; j < table[0].size(); j++)
+    {
+        table[0][j].ins_score = params.h + (j * params.g);
+        table[0][j].sub_score = -1e6;
+        table[0][j].del_score = -1e6;
+    }
+
+    calc_table(table, seq1, seq2, params);
+
+    int max_score = 0, max_i = 0, max_j = 0;
+    for (int i = 0; i < table.size(); i++)
+    {
+        for (int j = 0; j < table[0].size(); j++)
+        {
+            const DPCell& cell = table[i][j];
+            int current_max = max(cell.sub_score, cell.del_score, cell.ins_score);
+            if (current_max > max_score)
+            {
+                max_score = current_max;
+                max_i = i;
+                max_j = j;
+            }
+        }
+    }
+
+    return table[max_i][max_j].match_count;
+
+}
 }
