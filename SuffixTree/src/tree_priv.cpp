@@ -192,7 +192,7 @@ std::vector<int> Tree::collect_Suffix_Indices() {
     return indices;
 }
 
-void Tree::insert_suffix(const std::string& input, int pos)
+void Tree::insert_suffix(const std::string& input, int pos, StringOrigin origin)
 {
     if (!last_inserted_leaf) last_inserted_leaf = root;
 

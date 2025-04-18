@@ -14,11 +14,9 @@ namespace SuffixTree
 class Tree
 {
 public:
-    static Tree build(std::string const& str, std::string const& alphabet);
+    static Tree build(std::string const& str1, std::string const& str2, std::string const& alphabet);
 
     void display_children(Node* node) const;
-
-    void insert(std::string const& str);
 
     std::string enumerate_nodes() const;
 
@@ -27,17 +25,14 @@ public:
     // returns the number of leaf nodes in the tree
     unsigned leaf_node_count() const;
 
-
     unsigned internal_node_count() const;
 
     unsigned total_node_count() const;
 
     unsigned average_string_depth() const;
 
-
     unsigned deepest_string_depth() const;
 
-    
     unsigned find_deepest_internal_node() const;
     
 
@@ -51,7 +46,7 @@ private:
     void find_path(Node *u, std::string const& s, int i);
 
     // insert a suffix into the tree
-    void insert_suffix(std::string const& input, int pos);
+    void insert_suffix(std::string const& input, int pos, StringOrigin origin);
 
     // traverse down starting from the input node
     Node* node_hop(Node* n, int depth, std::string const& s);

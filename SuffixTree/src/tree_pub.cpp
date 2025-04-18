@@ -6,29 +6,26 @@ namespace SuffixTree
 {
 constexpr char ESCAPE_CHAR = '$';
 
-Tree Tree::build(std::string const& str, std::string const& alphabet)
+Tree Tree::build(std::string const& str1, std::string const& str2, std::string const& alphabet)
 {
     auto tree = Tree();
     // if any characters in the input are not a part of the alphabet, return empty tree
-    if(str.find_first_not_of(alphabet) != std::string::npos)
+    if(str1.find_first_not_of(alphabet) != std::string::npos && str2.find_first_not_of(alphabet) != std::string::npos)
     {
         return tree;
     }
 
-    std::string input = str + ESCAPE_CHAR;
+    std::string input = str1 + ESCAPE_CHAR;
     for (int i = 0; i < input.length(); i++) {
-        tree.insert_suffix(input, i);
+        tree.insert_suffix(input, i, StringOrigin::FIRST);
+    }
+
+    input = str2 + ESCAPE_CHAR;
+    for (int i = 0; i < input.length(); i++) {
+        tree.insert_suffix(input, i, StringOrigin::SECOND);
     }
 
     return tree;
-}
-
-void Tree::insert(std::string const& str)
-{
-    std::string input = str + ESCAPE_CHAR;
-    for (int i = 0; i < input.length(); i++) {
-        this->insert_suffix(input, i);
-    }
 }
 
 std::string Tree::enumerate_nodes() const {

@@ -24,6 +24,8 @@ struct AlphabetOrdering
     }
 };
 
+enum StringOrigin { FIRST, SECOND };
+
 struct Node 
 {
 
@@ -32,6 +34,8 @@ struct Node
 
     int suffix_index;
 
+    bool first_string_visited = false;
+    bool second_string_visited = false;
 
     std::map<char, Node*, AlphabetOrdering> children;
 
