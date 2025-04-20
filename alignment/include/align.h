@@ -30,6 +30,6 @@ struct AlignmentResult
 
 AlignmentResult align(std::string const& seq1, std::string const& seq2, AlignmentType const& type, AlignmentParams const& params);
 
-int get_match_count(std::string const& seq1, std::string const& seq2, Params const& params);
+int get_match_count(std::string const& seq1, std::string const& seq2, AlignmentParams const& params);
 
 }

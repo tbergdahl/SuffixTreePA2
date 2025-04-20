@@ -33,17 +33,19 @@ public:
 
     unsigned deepest_string_depth() const;
 
-    unsigned find_deepest_internal_node() const;
     
+    Node* find_deepest_shared_internal_node();
 
 private:
     Tree();
+
+    Node *find_shared_ancestor(Node *n);
 
     // used for debugging
     void display(Node* node, std::string const& orig_str, int indent = 0);
 
     // find a path starting from the input node
-    void find_path(Node *u, std::string const& s, int i);
+    void find_path(Node *u, std::string const& s, int i, StringOrigin origin);
 
     // insert a suffix into the tree
     void insert_suffix(std::string const& input, int pos, StringOrigin origin);
@@ -70,7 +72,7 @@ private:
     std::vector<int> collect_Suffix_Indices();
 
 
-    
+    void propagate_origins(Node* node);
     
     std::string enumerate(const Node* node) const;
     

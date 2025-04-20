@@ -20,17 +20,30 @@ Tree Tree::build(std::string const& str1, std::string const& str2, std::string c
         tree.insert_suffix(input, i, StringOrigin::FIRST);
     }
 
-    input = str2 + ESCAPE_CHAR;
+    input = str2 + '$';
     for (int i = 0; i < input.length(); i++) {
         tree.insert_suffix(input, i, StringOrigin::SECOND);
     }
-
+    tree.propagate_origins(tree.root);
     return tree;
 }
 
 std::string Tree::enumerate_nodes() const {
     return enumerate(root);
 }
+
+Node * Tree::find_shared_ancestor(Node * n)
+{
+    Node* parent = n->parent;
+    if(parent )
+}
+
+Node* Tree::find_deepest_shared_internal_node() 
+{
+    return find_shared_ancestor(last_inserted_leaf);
+}
+
+
 
 unsigned Tree::leaf_node_count() const
 {
@@ -119,29 +132,6 @@ void Tree::display_children(Node* node) const
     }
 }
 
-
-unsigned Tree::find_deepest_internal_node() const {
-    unsigned max_depth = 0;
-    std::stack<Node*> stack;
-    stack.push(root);
-    
-    while (!stack.empty()) {
-        Node* current = stack.top();
-        stack.pop();
-        // Check if the current node is an internal node
-        // meaing not a leaf and roots
-        if (current != root && current->end != -1) {
-            if (current->string_depth > max_depth) {
-                max_depth = current->string_depth;
-            }
-        }
-        for (const auto& child : current->children) {
-            stack.push(child.second);
-        }
-    }
-    
-    return max_depth;
-}
 
 
 

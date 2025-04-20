@@ -21,127 +21,94 @@ void Tree::reset()
     last_inserted_leaf = nullptr;
 }
 
-void Tree::find_path(Node* u, const std::string& s, int index) 
+void Tree::find_path(Node* u, const std::string& s, int index, StringOrigin origin) 
 {
     Node* v = u;
-
-  
     int matched = 0;
+    std::string x = s.substr(index);
 
-    auto x = s.substr(index);
+    // Update current node's origin flags as we traverse
+    if (origin == FIRST) v->first_string_visited = true;
+    else v->second_string_visited = true;
 
-    if (x.empty()) return;
-
-    while (true) 
+    while (!x.empty()) 
     {
-
         char firstChar = x[0];
-
-
         auto existing_child_entry = v->children.find(firstChar);
 
-        // no existing child - create new leaf
+        // No existing child - create new leaf
         if (existing_child_entry == v->children.end()) 
         {
             Node* leaf = new Node();
-            
-            // make the leaf start at the point of the last matched character
             leaf->start = index + matched;
             leaf->end = -1;
             leaf->suffix_index = index;
-            leaf->parent = v; 
-
-            // see below - x may be modified if we matched an entire edge
+            leaf->parent = v;
             leaf->string_depth = v->string_depth + x.length();
-
-            // add as child
+            
+            // Mark leaf with origin
+            leaf->first_string_visited = (origin == FIRST);
+            leaf->second_string_visited = (origin == SECOND);
+            
             v->children[firstChar] = leaf;
-
-            // keep track of what we inserted for insert_suffix()
             last_inserted_leaf = leaf;
             num_leaf_nodes++;
             break;
         }
 
-        // child entry does exist, so search for a spot to break, or a match
-
-        // removing some referencing
+        // Existing child found
         Node* existing = existing_child_entry->second;
-
-        // start at the child's suffix
         int suf_start = existing->start;
+        int suf_end = (existing->end == -1) ? s.length() - 1 : existing->end;
 
-        // if the child is a leaf, compare against the remainder of the string
-        int suf_end = (existing->end == -1) ? (s.length() - 1) : existing->end;
+        // Update existing node's origin flags
+        if (origin == FIRST) existing->first_string_visited = true;
+        else existing->second_string_visited = true;
 
-        // setup loop vars - j moves along s, i moves along x
-        int j = suf_start;
-        int i = 0;
-
-        // Compare characters from existing node's edge & x until a mismatch occurs or one of them becomes exhausted
-        while (i < x.size() && j <= suf_end && x[i] == s[j]) 
-        {
+        int i = 0, j = suf_start;
+        while (i < x.size() && j <= suf_end && x[i] == s[j]) {
             i++;
             j++;
         }
 
-        // If x matches the entire existing node's edge, move to the child of the existing node to continue comparing 
-        if (j > suf_end) 
-        {
-            // traverse tree
+        // Full match: move to child node
+        if (j > suf_end) {
             v = existing;
-
-            // so far, we've matched i characters. need to retain that information over the next iterations
             matched += i;
-
-            // we've already compared i characters of x and got a full match. compare the remaining characters in the next iteration
             x = x.substr(i);
             continue;
         }
 
-        // Mismatch found
-        if (x[i] != s[j]) 
-        {
-            // Create internal node
+        // Mismatch: split the edge
+        if (x[i] != s[j]) {
             Node* internal_node = new Node();
-
-            // new internal node starts at the same spot,
             internal_node->start = suf_start;
-
-            // but ends at the character before the mismatch
             internal_node->end = suf_start + i - 1;
-
-            // initialize parent & depth
             internal_node->parent = v;
-            internal_node->string_depth = (internal_node->parent->string_depth + i);
+            internal_node->string_depth = v->string_depth + i;
+            
+            // Inherit flags from existing child and current origin
+            internal_node->first_string_visited = existing->first_string_visited | (origin == FIRST);
+            internal_node->second_string_visited = existing->second_string_visited | (origin == SECOND);
 
-            // make the existing node hold the suffix which was not common 
-            // (the end of the internal node holds the index of the last matched char)
             existing->start = internal_node->end + 1;
-
-            // make parent the node holding the common suffix (internal node)
             existing->parent = internal_node;
 
-            // create new leaf for non-matching part of the inserted suffix
             Node* leaf = new Node();
-
-            // adjust start to be the position of the first unmatched character, including matched characters from prev iterations
-            leaf->start = index + matched + i; 
+            leaf->start = index + matched + i;
             leaf->end = -1;
             leaf->suffix_index = index;
-
-            // make child of common suffix between inserted and existing
             leaf->parent = internal_node;
             leaf->string_depth = internal_node->string_depth + (x.size() - i);
+            leaf->first_string_visited = (origin == FIRST);
+            leaf->second_string_visited = (origin == SECOND);
 
-            // insert nodes into tree
+            // Update child pointers
             v->children[firstChar] = internal_node;
             internal_node->children[s[existing->start]] = existing;
             internal_node->children[x[i]] = leaf;
 
-            // track our last insert for insert_suffix
             last_inserted_leaf = leaf;
-
             num_internal_nodes++;
             num_leaf_nodes++;
             break;
@@ -149,7 +116,15 @@ void Tree::find_path(Node* u, const std::string& s, int index)
     }
 }
 
+void Tree::propagate_origins(Node* node) {
+    if (node == nullptr) return;
 
+    for (auto& child : node->children) {
+        propagate_origins(child.second);
+        node->first_string_visited |= child.second->first_string_visited;
+        node->second_string_visited |= child.second->second_string_visited;
+    }
+}
 
 // Returns BWT as vector of characters
 std::string Tree::compute_BWT(const std::string& s) {
@@ -204,7 +179,7 @@ void Tree::insert_suffix(const std::string& input, int pos, StringOrigin origin)
     {
         // Follow the suffix link
         u = u->suffix_link;
-        find_path(u, input, pos + u->string_depth);
+        find_path(u, input, pos + u->string_depth, origin);
     }
     else
     {
@@ -224,7 +199,7 @@ void Tree::insert_suffix(const std::string& input, int pos, StringOrigin origin)
         v = node_hop(v, (u->string_depth - depth), input);
 
         // insert under v using find_path
-        find_path(v, input, pos + v->string_depth);
+        find_path(v, input, pos + v->string_depth, origin);
         u->suffix_link = v;  // update link
     }
 }
