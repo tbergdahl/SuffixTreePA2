@@ -15,6 +15,7 @@ using namespace ParseFasta;
 using namespace Alignment;
 
 namespace fs = std::filesystem;
+using SimilarityMatrix = std::vector<std::vector<int>>;
 
 std::vector<std::string> parse_covid_files()
 {
@@ -40,13 +41,16 @@ int find_leaf_suffix_index(Node* node) {
     return -1; // Shouldn't happen if the tree is valid
 }
 
-
+void print_matrix(std::ostream& dest, SimilarityMatrix const& matrix)
+{
+    // todo
+}
 
 int compute_similarity(std::string const& s1, std::string const& s2, std::string const& alphabet)
 {
     auto tree = Tree::build(s1, s2, alphabet);
 
-        /*
+    /*
         Begin calculating a, b, c from assignment description
     */
     int a, b, c;
@@ -56,7 +60,7 @@ int compute_similarity(std::string const& s1, std::string const& s2, std::string
     int start_index = find_leaf_suffix_index(deepest);
     int length = deepest->string_depth;
     
-    std::cout << s1.substr(start_index, length) << std::endl;
+    //std::cout << s1.substr(start_index, length) << std::endl;
 
     // extract common substring
     std::string substr = s1.substr(start_index, length);
@@ -140,22 +144,20 @@ int main(int argc, char *argv[])
     //     std::cerr << "Error: Unable to open file for writing: " << output_filename << std::endl;
     //     return 1;
     // }
-
-    std::string s1 = "commonsubstring";
-    std::string s2 = "coammonxyz";
     
-
-    //std::cout << tree.enumerate_nodes();
-    //tree.display();
-
-
    
-
-    using SimilarityMatrix = std::vector<std::vector<int>>;
-
     
-
+    auto sequences = parse_covid_files();
+    auto matrix = SimilarityMatrix(sequences.size(), std::vector<int>(sequences.size()));
+    for(int i = 0; i < sequences.size(); i++)
+    {
+        for(int j = i + 1; j < sequences.size(); j++)
+        {
+            matrix[i][j] = compute_similarity(sequences[i], sequences[j], "agct");
+        }
+    }
     
+    print_matrix(std::cout, matrix);
 
     return 0;
 
