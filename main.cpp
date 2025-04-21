@@ -20,8 +20,20 @@ using SimilarityMatrix = std::vector<std::vector<int>>;
 std::vector<std::string> parse_covid_files()
 {
     std::vector<std::string> sequences;
+    const std::filesystem::path test_dir = std::filesystem::current_path() / "tests" / "TestData2";
 
-    // parse each fasta file
+    for (const auto& eachEntry : std::filesystem::directory_iterator(test_dir)) {
+        if (eachEntry.path().extension() == ".fasta") {
+            try {
+                auto sequencePair = ParseFasta::parse(eachEntry.path().string(), "");
+                sequences.push_back(sequencePair.second);
+            } catch (const std::exception& e) {
+                std::cerr << "error bruh " << std::endl;
+            }
+        }
+    }
+
+    return sequences;
 }
 
 
@@ -69,7 +81,7 @@ int compute_similarity(std::string const& s1, std::string const& s2, std::string
     auto pos = s2.find_first_of(substr);
     if(pos == std::string::npos)
     {
-        throw std::exception("UGH");
+        throw std::runtime_error("UGH");
     }
 
     {
@@ -145,7 +157,11 @@ int main(int argc, char *argv[])
     //     return 1;
     // }
     
-   
+    auto sequence = parse_covid_files();
+
+    for (size_t i = 0; i < sequence.size(); ++i) {
+        std::cout << "Sequence " << i + 1 << ": " << sequence[i] << "\n";
+    }
     
     auto sequences = parse_covid_files();
     auto matrix = SimilarityMatrix(sequences.size(), std::vector<int>(sequences.size()));
