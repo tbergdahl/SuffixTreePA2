@@ -55,7 +55,23 @@ int find_leaf_suffix_index(Node* node) {
 
 void print_matrix(std::ostream& dest, SimilarityMatrix const& matrix)
 {
-    // todo
+    dest << std::setw(10) << " ";
+    for (size_t j = 0; j < matrix.size(); ++j) {
+        dest << std::setw(10) << j+1;
+    }
+    dest << "\n";
+
+    for (size_t i = 0; i < matrix.size(); ++i) {
+        dest << std::setw(10) << i+1;
+        for (size_t j = 0; j < matrix.size(); ++j) {
+            if (j <= i) {
+                dest << std::setw(10) << " ";
+            } else {
+                dest << std::setw(10) << matrix[i][j];
+            }
+        }
+        dest << "\n";
+    }
 }
 
 int compute_similarity(std::string const& s1, std::string const& s2, std::string const& alphabet)
@@ -157,19 +173,21 @@ int main(int argc, char *argv[])
     //     return 1;
     // }
     
+    /*
+    
     auto sequence = parse_covid_files();
 
     for (size_t i = 0; i < sequence.size(); ++i) {
         std::cout << "Sequence " << i + 1 << ": " << sequence[i] << "\n";
     }
-    
+    */
     auto sequences = parse_covid_files();
     auto matrix = SimilarityMatrix(sequences.size(), std::vector<int>(sequences.size()));
     for(int i = 0; i < sequences.size(); i++)
     {
         for(int j = i + 1; j < sequences.size(); j++)
         {
-            matrix[i][j] = compute_similarity(sequences[i], sequences[j], "agct");
+            matrix[i][j] = compute_similarity(sequences[i], sequences[j], "AGCT");
         }
     }
     
