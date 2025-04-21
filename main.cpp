@@ -69,8 +69,8 @@ int main(int argc, char *argv[])
     // }
 
     std::string s1 = "commonsubstring";
-    std::string s2 = "ommon";
-    auto tree = Tree::build(s1, s2, "commonsubstring");
+    std::string s2 = "coammonxyz";
+    auto tree = Tree::build(s1, s2, "axyzcommonsubstring");
 
     //std::cout << tree.enumerate_nodes();
     //tree.display();
