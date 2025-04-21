@@ -21,15 +21,13 @@ void Tree::reset()
     last_inserted_leaf = nullptr;
 }
 
-void Tree::find_path(Node* u, const std::string& s, int index, StringOrigin origin) 
+void Tree::find_path(Node* u, const std::string& s, int index) 
 {
     Node* v = u;
     int matched = 0;
     std::string x = s.substr(index);
 
-    // Update current node's origin flags as we traverse
-    if (origin == FIRST) v->first_string_visited = true;
-    else v->second_string_visited = true;
+    bool inserting_first_string = (x.find('#') != std::string::npos);
 
     while (!x.empty()) 
     {
@@ -45,10 +43,9 @@ void Tree::find_path(Node* u, const std::string& s, int index, StringOrigin orig
             leaf->suffix_index = index;
             leaf->parent = v;
             leaf->string_depth = v->string_depth + x.length();
-            
-            // Mark leaf with origin
-            leaf->first_string_visited = (origin == FIRST);
-            leaf->second_string_visited = (origin == SECOND);
+            leaf->first_string_visited = inserting_first_string;
+            leaf->second_string_visited = !inserting_first_string;
+
             
             v->children[firstChar] = leaf;
             last_inserted_leaf = leaf;
@@ -61,18 +58,13 @@ void Tree::find_path(Node* u, const std::string& s, int index, StringOrigin orig
         int suf_start = existing->start;
         int suf_end = (existing->end == -1) ? s.length() - 1 : existing->end;
 
-        // Update existing node's origin flags
-        if (origin == FIRST) existing->first_string_visited = true;
-        else existing->second_string_visited = true;
-
         int i = 0, j = suf_start;
         while (i < x.size() && j <= suf_end && x[i] == s[j]) {
             i++;
             j++;
         }
 
-        // Full match: move to child node
-        if (j > suf_end) {
+        if (j > suf_end || i == x.size()) {
             v = existing;
             matched += i;
             x = x.substr(i);
@@ -86,10 +78,6 @@ void Tree::find_path(Node* u, const std::string& s, int index, StringOrigin orig
             internal_node->end = suf_start + i - 1;
             internal_node->parent = v;
             internal_node->string_depth = v->string_depth + i;
-            
-            // Inherit flags from existing child and current origin
-            internal_node->first_string_visited = existing->first_string_visited | (origin == FIRST);
-            internal_node->second_string_visited = existing->second_string_visited | (origin == SECOND);
 
             existing->start = internal_node->end + 1;
             existing->parent = internal_node;
@@ -100,8 +88,8 @@ void Tree::find_path(Node* u, const std::string& s, int index, StringOrigin orig
             leaf->suffix_index = index;
             leaf->parent = internal_node;
             leaf->string_depth = internal_node->string_depth + (x.size() - i);
-            leaf->first_string_visited = (origin == FIRST);
-            leaf->second_string_visited = (origin == SECOND);
+            leaf->first_string_visited = inserting_first_string;
+            leaf->second_string_visited = !inserting_first_string;
 
             // Update child pointers
             v->children[firstChar] = internal_node;
@@ -167,7 +155,7 @@ std::vector<int> Tree::collect_Suffix_Indices() {
     return indices;
 }
 
-void Tree::insert_suffix(const std::string& input, int pos, StringOrigin origin)
+void Tree::insert_suffix(const std::string& input, int pos)
 {
     if (!last_inserted_leaf) last_inserted_leaf = root;
 
@@ -179,7 +167,7 @@ void Tree::insert_suffix(const std::string& input, int pos, StringOrigin origin)
     {
         // Follow the suffix link
         u = u->suffix_link;
-        find_path(u, input, pos + u->string_depth, origin);
+        find_path(u, input, pos + u->string_depth);
     }
     else
     {
@@ -199,7 +187,7 @@ void Tree::insert_suffix(const std::string& input, int pos, StringOrigin origin)
         v = node_hop(v, (u->string_depth - depth), input);
 
         // insert under v using find_path
-        find_path(v, input, pos + v->string_depth, origin);
+        find_path(v, input, pos + v->string_depth);
         u->suffix_link = v;  // update link
     }
 }

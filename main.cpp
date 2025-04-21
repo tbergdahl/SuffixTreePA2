@@ -7,6 +7,7 @@
 #include <fstream>
 #include <iomanip>
 #include <vector>
+#include <algorithm>
 #include <filesystem>
 
 using namespace SuffixTree;
@@ -15,6 +16,21 @@ using namespace Alignment;
 
 namespace fs = std::filesystem;
 
+// used to find the start coordinates of common substring on s1
+int find_leaf_suffix_index(Node* node) {
+    if (node->children.empty()) {
+        // This is a leaf, return its suffix index
+        return node->suffix_index;
+    }
+
+    for (auto& child : node->children) {
+        if (child.second->first_string_visited) {
+            return find_leaf_suffix_index(child.second);
+        }
+    }
+
+    return -1; // Shouldn't happen if the tree is valid
+}
 
 int main(int argc, char *argv[])
 {
@@ -53,13 +69,71 @@ int main(int argc, char *argv[])
     // }
 
     std::string s1 = "commonsubstring";
-    std::string s2 = "com";
+    std::string s2 = "ommon";
     auto tree = Tree::build(s1, s2, "commonsubstring");
-    auto deepest = tree.find_deepest_shared_internal_node();
 
-    auto len = deepest->end - deepest->start + 1;
+    //std::cout << tree.enumerate_nodes();
+    //tree.display();
 
-    std::cout << s1.substr(deepest->string_depth, len);
+
+    /*
+        Begin calculating a, b, c from assignment description
+    */
+    int a, b, c;
+
+
+    Node* deepest = tree.find_deepest_shared_internal_node();
+
+    int start_index = find_leaf_suffix_index(deepest);
+    int length = deepest->string_depth;
+    
+    std::cout << s1.substr(start_index, length) << std::endl;
+
+    // extract common substring
+    std::string substr = s1.substr(start_index, length);
+
+    // make sure it exists in s2
+    auto pos = s2.find_first_of(substr);
+    if(pos == std::string::npos)
+    {
+        throw std::exception("UGH");
+    }
+
+    {
+        /*
+            Compute B from assignment description
+        */
+        b = substr.length();
+    }
+
+    AlignmentParams params { 1, -2, -5, -1 };
+    // calculate the coordinates of the sub-sections of the strings to align
+    size_t x_1 = start_index, x_2 = pos;
+    size_t y_1 = start_index + length, y_2 = pos + length;
+    {
+        /*
+            Compute A from assignment description
+        */
+        std::string s1_prefix = s1.substr(0, x_1);
+        std::string s2_prefix = s2.substr(0, x_2);
+
+        std::string s_1_rev, s_2_rev;
+        std::reverse_copy(s1_prefix.begin(), s1_prefix.end(), std::back_inserter(s_1_rev));
+        std::reverse_copy(s2_prefix.begin(), s2_prefix.end(), std::back_inserter(s_2_rev));
+        a = Alignment::get_match_count(s_1_rev, s_2_rev, params);
+    }
+
+    {
+        /*
+            Compute c from assignment description
+        */
+        auto s_1_fwd = s1.substr(y_1);
+        auto s_2_fwd = s2.substr(y_2);
+
+        c = Alignment::get_match_count(s_1_fwd, s_2_fwd, params);
+    }
+
+    std::cout << "Similarity Score: " << a + b + c << std::endl;
 
     return 0;
 

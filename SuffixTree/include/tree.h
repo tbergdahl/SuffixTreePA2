@@ -33,6 +33,10 @@ public:
 
     unsigned deepest_string_depth() const;
 
+    void display()
+    {
+        display(root, user_input);
+    }
     
     Node* find_deepest_shared_internal_node();
 
@@ -45,10 +49,10 @@ private:
     void display(Node* node, std::string const& orig_str, int indent = 0);
 
     // find a path starting from the input node
-    void find_path(Node *u, std::string const& s, int i, StringOrigin origin);
+    void find_path(Node *u, std::string const& s, int i);
 
     // insert a suffix into the tree
-    void insert_suffix(std::string const& input, int pos, StringOrigin origin);
+    void insert_suffix(std::string const& input, int pos);
 
     // traverse down starting from the input node
     Node* node_hop(Node* n, int depth, std::string const& s);

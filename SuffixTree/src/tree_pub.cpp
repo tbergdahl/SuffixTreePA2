@@ -1,4 +1,5 @@
 #include "tree.h"
+#include <queue>
 
 // Public methods for tree
 
@@ -15,15 +16,12 @@ Tree Tree::build(std::string const& str1, std::string const& str2, std::string c
         return tree;
     }
 
-    std::string input = str1 + ESCAPE_CHAR;
+    std::string input = str1 + "#" + str2 + ESCAPE_CHAR;
     for (int i = 0; i < input.length(); i++) {
-        tree.insert_suffix(input, i, StringOrigin::FIRST);
+        tree.insert_suffix(input, i);
     }
 
-    input = str2 + '$';
-    for (int i = 0; i < input.length(); i++) {
-        tree.insert_suffix(input, i, StringOrigin::SECOND);
-    }
+    tree.user_input = input;
     tree.propagate_origins(tree.root);
     return tree;
 }
@@ -35,12 +33,40 @@ std::string Tree::enumerate_nodes() const {
 Node * Tree::find_shared_ancestor(Node * n)
 {
     Node* parent = n->parent;
-    if(parent )
+    if(parent->first_string_visited && parent->second_string_visited)
+    {
+        return parent;
+    }
+    else
+    {
+        return find_shared_ancestor(parent);
+    }
 }
 
 Node* Tree::find_deepest_shared_internal_node() 
 {
-    return find_shared_ancestor(last_inserted_leaf);
+    std::queue<Node*> q;
+    q.push(root);
+    Node *deepest = root;
+
+    while (!q.empty())
+    {
+        Node *cur = q.front();
+
+        if(cur->first_string_visited && cur->second_string_visited)
+        {
+            deepest = (cur->string_depth > deepest->string_depth) ? cur : deepest;
+        }
+
+        for(auto child : cur->children)
+        {
+            q.push(child.second);
+        }
+
+        q.pop();
+    }
+
+    return deepest;
 }
 
 
