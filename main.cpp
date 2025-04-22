@@ -8,7 +8,7 @@
 #include <iomanip>
 #include <vector>
 #include <algorithm>
-#include <filesystem>
+#include <tuple>
 
 using namespace SuffixTree;
 using namespace ParseFasta;
@@ -16,6 +16,13 @@ using namespace Alignment;
 
 namespace fs = std::filesystem;
 using SimilarityMatrix = std::vector<std::vector<int>>;
+
+// Timing wrapper structure
+struct ComparisonTiming {
+    double suffix_tree_time = 0;
+    double alignment_time = 0;
+    double total_time = 0;
+};
 
 std::vector<std::string> parse_covid_files()
 {
@@ -136,63 +143,83 @@ int compute_similarity(std::string const& s1, std::string const& s2, std::string
     return (a + b + c);
 }
 
+// Wrapper function to measure timing without modifying compute_similarity
+ComparisonTiming timed_compute_similarity(const std::string& s1, const std::string& s2, 
+    const std::string& alphabet, int& result) {
+    ComparisonTiming timing;
+    auto start_total = std::chrono::high_resolution_clock::now();
 
-int main(int argc, char *argv[])
+    // Time suffix tree construction
+    auto start_tree = std::chrono::high_resolution_clock::now();
+    auto tree = Tree::build(s1, s2, alphabet);
+    auto end_tree = std::chrono::high_resolution_clock::now();
+    timing.suffix_tree_time = std::chrono::duration<double>(end_tree - start_tree).count();
+
+    // The rest is considered alignment time
+    auto start_align = std::chrono::high_resolution_clock::now();
+    result = compute_similarity(s1, s2, alphabet);
+    auto end_align = std::chrono::high_resolution_clock::now();
+    timing.alignment_time = std::chrono::duration<double>(end_align - start_align).count();
+
+    auto end_total = std::chrono::high_resolution_clock::now();
+    timing.total_time = std::chrono::duration<double>(end_total - start_total).count();
+
+    return timing;
+}
+
+int main()
 {
-    char path_char;
-    #if defined(_WIN32)
-        path_char = '\\';
-    #else 
-        path_char = '/';
-    #endif
+    try {
+        std::cout << "Loading sequences...\n";
+        auto sequences = parse_covid_files();
+        SimilarityMatrix matrix(sequences.size(), std::vector<int>(sequences.size()));
+        std::vector<std::tuple<int, int, double, double, double>> timing_data;
 
-    // std::string cur_dir = fs::current_path().string();
-    // std::string test_dir = path_char + std::string("tests") + path_char + std::string("TestData") +path_char ;
-
-    // std::string fasta_filename    = cur_dir + test_dir + "Covid_Wuhan.fasta";
-    // std::string alphabet_filename = cur_dir + test_dir + "DNA_alphabet.txt";
-
-    // if(argc > 1)
-    // {
-    //     fasta_filename = cur_dir + test_dir + std::string(argv[1]);
-    // }
-    // if(argc > 2)
-    // {
-    //     alphabet_filename = cur_dir + test_dir + std::string(argv[2]);
-    // }
-
-    // Seq_alph_pair pair = parse(fasta_filename, alphabet_filename);
-    
-
-    // std::string output_filename = cur_dir + path_char + "output" + path_char + "outputs.txt";
-    // std::ofstream output_file(output_filename);
-
-
-    // if (!output_file.is_open()) {
-    //     std::cerr << "Error: Unable to open file for writing: " << output_filename << std::endl;
-    //     return 1;
-    // }
-    
-    /*
-    
-    auto sequence = parse_covid_files();
-
-    for (size_t i = 0; i < sequence.size(); ++i) {
-        std::cout << "Sequence " << i + 1 << ": " << sequence[i] << "\n";
-    }
-    */
-    auto sequences = parse_covid_files();
-    auto matrix = SimilarityMatrix(sequences.size(), std::vector<int>(sequences.size()));
-    for(int i = 0; i < sequences.size(); i++)
-    {
-        for(int j = i + 1; j < sequences.size(); j++)
-        {
-            matrix[i][j] = compute_similarity(sequences[i], sequences[j], "AGCT");
+        for (size_t i = 0; i < sequences.size(); ++i) {
+            std::cout << "Processing Sequence " << i+1 << "\n";
+            for (size_t j = i+1; j < sequences.size(); ++j) {
+                int similarity_score;
+                auto timing = timed_compute_similarity(sequences[i], sequences[j], "AGCT", similarity_score);
+                matrix[i][j] = similarity_score;
+                timing_data.emplace_back(i+1, j+1, timing.suffix_tree_time, 
+                                       timing.alignment_time, timing.total_time);
+                
+                std::cout << "  vs Sequence " << j+1 << ": "
+                          << "Tree=" << timing.suffix_tree_time << "s, "
+                          << "Align=" << timing.alignment_time << "s, "
+                          << "Total=" << timing.total_time << "s\n";
+            }
         }
+
+        print_matrix(std::cout, matrix);
+
+        // Performance summary
+        std::cout << "\nPerformance Summary:\n";
+        std::cout << "============================================\n";
+        std::cout << "Pair\tTree Time\tAlign Time\tTotal Time\n";
+        std::cout << "--------------------------------------------\n";
+        
+        double total_tree = 0, total_align = 0, total_all = 0;
+        for (const auto& [i, j, tree, align, total] : timing_data) {
+            std::cout << i << "v" << j << "\t"
+                      << std::fixed << std::setprecision(4) << tree << "\t\t"
+                      << align << "\t\t" << total << "\n";
+            total_tree += tree;
+            total_align += align;
+            total_all += total;
+        }
+        
+        std::cout << "--------------------------------------------\n";
+        std::cout << "TOTAL\t" << total_tree << "\t\t" << total_align << "\t\t" << total_all << "\n";
+        std::cout << "AVG\t" << total_tree/timing_data.size() << "\t\t"
+                  << total_align/timing_data.size() << "\t\t"
+                  << total_all/timing_data.size() << "\n";
+        std::cout << "============================================\n";
+
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        return 1;
     }
-    
-    print_matrix(std::cout, matrix);
 
     return 0;
-
 }
