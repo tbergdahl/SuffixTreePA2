@@ -86,6 +86,7 @@ int compute_similarity(std::string const& s1, std::string const& s2, std::string
     auto start_tree = std::chrono::high_resolution_clock::now();
     auto tree = Tree::build(s1, s2, alphabet);
     auto end_tree = std::chrono::high_resolution_clock::now();
+    
     timing.suffix_tree_time = std::chrono::duration<double>(end_tree - start_tree).count();
 
     /*
@@ -165,9 +166,9 @@ int main()
         for (size_t i = 0; i < sequences.size(); ++i) {
             std::cout << "Processing Sequence " << i+1 << "\n";
             for (size_t j = 0; j < sequences.size(); ++j) {
-                int similarity_score;
-                int lcs_length;
+                int lcs_length = 0;
                 ComparisonTiming timing{ 0, 0, 0 };
+                int similarity_score = compute_similarity(sequences[i], sequences[j], "ACGT", lcs_length, timing);
                 matrix[i][j] = similarity_score;
                 lcs_lengths[i][j] = lcs_length;
                 timing_data.emplace_back(i+1, j+1, timing.suffix_tree_time, 
