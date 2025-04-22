@@ -122,47 +122,7 @@ int compute_similarity(std::string const& s1, std::string const& s2, std::string
 
 
 int main(int argc, char *argv[])
-{
-    char path_char;
-    #if defined(_WIN32)
-        path_char = '\\';
-    #else 
-        path_char = '/';
-    #endif
-
-    // std::string cur_dir = fs::current_path().string();
-    // std::string test_dir = path_char + std::string("tests") + path_char + std::string("TestData") +path_char ;
-
-    // std::string fasta_filename    = cur_dir + test_dir + "Covid_Wuhan.fasta";
-    // std::string alphabet_filename = cur_dir + test_dir + "DNA_alphabet.txt";
-
-    // if(argc > 1)
-    // {
-    //     fasta_filename = cur_dir + test_dir + std::string(argv[1]);
-    // }
-    // if(argc > 2)
-    // {
-    //     alphabet_filename = cur_dir + test_dir + std::string(argv[2]);
-    // }
-
-    // Seq_alph_pair pair = parse(fasta_filename, alphabet_filename);
-    
-
-    // std::string output_filename = cur_dir + path_char + "output" + path_char + "outputs.txt";
-    // std::ofstream output_file(output_filename);
-
-
-    // if (!output_file.is_open()) {
-    //     std::cerr << "Error: Unable to open file for writing: " << output_filename << std::endl;
-    //     return 1;
-    // }
-    
-    // auto sequence = parse_covid_files();
-
-    // for (size_t i = 0; i < sequence.size(); ++i) {
-    //     std::cout << "Sequence " << i + 1 << ": " << sequence[i] << "\n";
-    // }
-    
+{    
     auto sequences = parse_covid_files();
     auto matrix = SimilarityMatrix(sequences.size(), std::vector<int>(sequences.size()));
     for(int i = 0; i < sequences.size(); i++)
@@ -176,5 +136,4 @@ int main(int argc, char *argv[])
     print_matrix(std::cout, matrix);
 
     return 0;
-
 }
