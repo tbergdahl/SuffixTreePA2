@@ -157,19 +157,19 @@ int main(int argc, char *argv[])
     //     return 1;
     // }
     
-    auto sequence = parse_covid_files();
+    // auto sequence = parse_covid_files();
 
-    for (size_t i = 0; i < sequence.size(); ++i) {
-        std::cout << "Sequence " << i + 1 << ": " << sequence[i] << "\n";
-    }
+    // for (size_t i = 0; i < sequence.size(); ++i) {
+    //     std::cout << "Sequence " << i + 1 << ": " << sequence[i] << "\n";
+    // }
     
     auto sequences = parse_covid_files();
     auto matrix = SimilarityMatrix(sequences.size(), std::vector<int>(sequences.size()));
     for(int i = 0; i < sequences.size(); i++)
     {
-        for(int j = i + 1; j < sequences.size(); j++)
+        for(int j = 0; j < sequences.size(); j++)
         {
-            matrix[i][j] = compute_similarity(sequences[i], sequences[j], "agct");
+            matrix[i][j] = compute_similarity(sequences[i], sequences[j], "AGCT");
         }
     }
     

@@ -20,8 +20,6 @@ Tree Tree::build(std::string const& str1, std::string const& str2, std::string c
     for (int i = 0; i < input.length(); i++) {
         tree.insert_suffix(input, i);
     }
-
-    tree.user_input = input;
     tree.propagate_origins(tree.root);
     return tree;
 }
