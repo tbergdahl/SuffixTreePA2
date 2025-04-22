@@ -19,6 +19,8 @@ using SimilarityMatrix = std::vector<std::vector<int>>;
 
 // Timing wrapper structure
 struct ComparisonTiming {
+    int s1_label;
+    int s2_label;
     double suffix_tree_time = 0;
     double alignment_time = 0;
     double total_time = 0;
@@ -83,7 +85,11 @@ void print_matrix(std::ostream& dest, SimilarityMatrix const& matrix)
 
 int compute_similarity(std::string const& s1, std::string const& s2, std::string const& alphabet, int& lcs_len, ComparisonTiming& timing)
 {
+    auto start_tree = std::chrono::high_resolution_clock::now();
     auto tree = Tree::build(s1, s2, alphabet);
+    auto end_tree = std::chrono::high_resolution_clock::now();
+    
+    timing.suffix_tree_time = std::chrono::duration<double>(end_tree - start_tree).count();
 
     /*
         Begin calculating a, b, c from assignment description
@@ -118,7 +124,7 @@ int compute_similarity(std::string const& s1, std::string const& s2, std::string
     // calculate the coordinates of the sub-sections of the strings to align
     size_t x_1 = start_index, x_2 = pos;
     size_t y_1 = start_index + length, y_2 = pos + length;
-
+    auto start_align = std::chrono::high_resolution_clock::now();
     {
         /*
             Compute A from assignment description
@@ -141,33 +147,14 @@ int compute_similarity(std::string const& s1, std::string const& s2, std::string
 
         c = Alignment::get_match_count(s_1_fwd, s_2_fwd, params);
     }
+    auto end_align = std::chrono::high_resolution_clock::now();
+    timing.alignment_time = std::chrono::duration<double>(end_align - start_align).count();
+
+    timing.total_time = timing.alignment_time + timing.suffix_tree_time;
 
     return (a + b + c);
 }
 
-// Wrapper function to measure timing without modifying compute_similarity
-ComparisonTiming timed_compute_similarity(const std::string& s1, const std::string& s2, 
-    const std::string& alphabet, int& result, int& lcs_len) {
-    ComparisonTiming timing;
-    auto start_total = std::chrono::high_resolution_clock::now();
-
-    // Time suffix tree construction
-    auto start_tree = std::chrono::high_resolution_clock::now();
-    auto tree = Tree::build(s1, s2, alphabet);
-    auto end_tree = std::chrono::high_resolution_clock::now();
-    timing.suffix_tree_time = std::chrono::duration<double>(end_tree - start_tree).count();
-
-    // The rest is considered alignment time
-    auto start_align = std::chrono::high_resolution_clock::now();
-    result = compute_similarity(s1, s2, alphabet, lcs_len, timing);
-    auto end_align = std::chrono::high_resolution_clock::now();
-    timing.alignment_time = std::chrono::duration<double>(end_align - start_align).count();
-
-    auto end_total = std::chrono::high_resolution_clock::now();
-    timing.total_time = std::chrono::duration<double>(end_total - start_total).count();
-
-    return timing;
-}
 
 int main()
 {
@@ -176,18 +163,17 @@ int main()
         auto sequences = parse_covid_files();
         SimilarityMatrix lcs_lengths(sequences.size(), std::vector<int>(sequences.size()));
         SimilarityMatrix matrix(sequences.size(), std::vector<int>(sequences.size()));
-        std::vector<std::tuple<int, int, double, double, double>> timing_data;
+        std::vector<ComparisonTiming> timing_data;
 
-        for (size_t i = 0; i < sequences.size(); ++i) {
+        for (int i = 0; i < sequences.size(); ++i) {
             std::cout << "Processing Sequence " << i+1 << "\n";
-            for (size_t j = 0; j < sequences.size(); ++j) {
-                int similarity_score;
-                int lcs_length;
-                auto timing = timed_compute_similarity(sequences[i], sequences[j], "AGCT", similarity_score, lcs_length);
+            for (int j = 0; j < sequences.size(); ++j) {
+                int lcs_length = 0;
+                ComparisonTiming timing{ i, j, 0, 0, 0 };
+                int similarity_score = compute_similarity(sequences[i], sequences[j], "ACGT", lcs_length, timing);
                 matrix[i][j] = similarity_score;
                 lcs_lengths[i][j] = lcs_length;
-                timing_data.emplace_back(i+1, j+1, timing.suffix_tree_time, 
-                                       timing.alignment_time, timing.total_time);
+                timing_data.push_back(timing);
                 
                 std::cout << "  vs Sequence " << j+1 << ": "
                           << "Tree=" << timing.suffix_tree_time << "s, "
