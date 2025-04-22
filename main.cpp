@@ -19,6 +19,8 @@ using SimilarityMatrix = std::vector<std::vector<int>>;
 
 // Timing wrapper structure
 struct ComparisonTiming {
+    int s1_label;
+    int s2_label;
     double suffix_tree_time = 0;
     double alignment_time = 0;
     double total_time = 0;
@@ -161,18 +163,17 @@ int main()
         auto sequences = parse_covid_files();
         SimilarityMatrix lcs_lengths(sequences.size(), std::vector<int>(sequences.size()));
         SimilarityMatrix matrix(sequences.size(), std::vector<int>(sequences.size()));
-        std::vector<std::tuple<int, int, double, double, double>> timing_data;
+        std::vector<ComparisonTiming> timing_data;
 
-        for (size_t i = 0; i < sequences.size(); ++i) {
+        for (int i = 0; i < sequences.size(); ++i) {
             std::cout << "Processing Sequence " << i+1 << "\n";
-            for (size_t j = 0; j < sequences.size(); ++j) {
+            for (int j = 0; j < sequences.size(); ++j) {
                 int lcs_length = 0;
-                ComparisonTiming timing{ 0, 0, 0 };
+                ComparisonTiming timing{ i, j, 0, 0, 0 };
                 int similarity_score = compute_similarity(sequences[i], sequences[j], "ACGT", lcs_length, timing);
                 matrix[i][j] = similarity_score;
                 lcs_lengths[i][j] = lcs_length;
-                timing_data.emplace_back(i+1, j+1, timing.suffix_tree_time, 
-                                       timing.alignment_time, timing.total_time);
+                timing_data.push_back(timing);
                 
                 std::cout << "  vs Sequence " << j+1 << ": "
                           << "Tree=" << timing.suffix_tree_time << "s, "
